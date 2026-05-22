@@ -87,8 +87,9 @@ type ProductArray [NMAX]Product
 // ======================================================
 
 func logo() {
-	pink := "\033[38;2;245;187;212m"
-	logo := fmt.Sprintf(`
+	var pink, logo string
+	pink = "\033[38;2;245;187;212m"
+	logo = fmt.Sprintf(`
 %s
 0110101010110101010101010 1 0 10101 011 0101 1 1 01 1 10 1 1 1 101 1 01 01 1 01 1 01
 10010      10101 10 1 1 0     10 10 01  10   0 0 10 1 00 0 1 0 010 0 10 0  0 0  0
@@ -174,6 +175,7 @@ func showMenu(title string, menus [5]string, total int) {
 }
 
 func crudMenu() {
+	logo()
 	var menus [5]string
 	var c int
 
