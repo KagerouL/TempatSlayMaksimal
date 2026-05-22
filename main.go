@@ -90,6 +90,12 @@ func logo() {
 	pink := "\033[38;2;245;187;212m"
 	logo := fmt.Sprintf(`
 %s
+0110101010110101010101010 1 0 10101 011 0101 1 1 01 1 10 1 1 1 101 1 01 01 1 01 1 01
+10010      10101 10 1 1 0     10 10 01  10   0 0 10 1 00 0 1 0 010 0 10 0  0 0  0
+  001       011  0  0  0      0  1  1    1       1  0  1 0 1    1  1  1 0  1 0  1
+   1         0   1     0         0       1          0      1       0    1    0  1
+             1                           0                                      1
+             0                           1
       _____                    _____                    _____          
      /\    \                  /\    \                  /\    \         
     /::\    \                /::\    \                /::\____\        
@@ -142,7 +148,7 @@ func inputString(text string) string {
 }
 
 func clearScreen() {
-
+	fmt.Print("\033[H\033[2J")
 }
 
 func pause() {
@@ -196,7 +202,7 @@ func crudMenu() {
 			fmt.Println("VIEW")
 
 		case 5:
-			return
+			clearScreen()
 
 		case 0:
 			return
@@ -220,6 +226,8 @@ func mainMenu() {
 		showMenu("MAIN MENU", menus, 4)
 
 		c = inputInt("Choose menu: ")
+		d := 0
+		fmt.Scan(&d)
 
 		switch c {
 		case 1:
@@ -417,6 +425,21 @@ func leastSoldProduct(A ProductArray, n int) {
 // ======================================================
 
 func findIndexByID(A ProductArray, n int, id int) int {
+	var mid, left, right, isFound int
+	left = 0
+	right = n
+	isFound = -1
+	for left < right && isFound == -1 {
+		mid = (left + right) / 2
+		if id == A[mid].ID {
+			isFound = mid
+		}
+		if id > A[mid].ID {
+			right = mid - 1
+		} else if id < A[mid].ID {
+			left = mid + 1
+		}
+	}
 	return -1
 }
 
@@ -441,6 +464,7 @@ func printProduct(B Product) {
 // ======================================================
 
 func main() {
+	//clearScreen()
 	logo()
 	mainMenu()
 }
