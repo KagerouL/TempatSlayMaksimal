@@ -171,16 +171,28 @@ func crudMenu() {
 	var menus [5]string
 	var c int
 
+<<<<<<< HEAD
 	menus[0] = "Tambah Produk"
 	menus[1] = "Perbarui Produk"
 	menus[2] = "Hapus Produk"
 	menus[3] = "Lihat Produk"
 	menus[4] = "Kembali"
+=======
+	menus[0] = "Create Product"
+	menus[1] = "Update Product"
+	menus[2] = "Delete Product"
+	menus[3] = "View Product"
+	menus[4] = "Back"
+>>>>>>> 87db5b7810d8fd3997b68d967da9695a0dad7d98
 
 	for {
 		showMenu("CRUD MENU", menus, 5)
 
+<<<<<<< HEAD
 		c = inputInt("Pilih menu: ")
+=======
+		c = inputInt("Choose menu: ")
+>>>>>>> 87db5b7810d8fd3997b68d967da9695a0dad7d98
 
 		switch c {
 		case 1:
@@ -202,7 +214,11 @@ func crudMenu() {
 			return
 
 		default:
+<<<<<<< HEAD
 			fmt.Println("Menu ini tidak tersedia")
+=======
+			fmt.Println("Menu not available")
+>>>>>>> 87db5b7810d8fd3997b68d967da9695a0dad7d98
 		}
 	}
 }
@@ -211,22 +227,36 @@ func mainMenu() {
 	var menus [5]string
 	var c int
 
+<<<<<<< HEAD
 	menus[0] = "Kelola"
 	menus[1] = "Lihat Produk"
 	menus[2] = "Rekomendasi"
+=======
+	menus[0] = "Manager"
+	menus[1] = "View Product"
+	menus[2] = "Recommendation"
+>>>>>>> 87db5b7810d8fd3997b68d967da9695a0dad7d98
 	menus[3] = "Sales"
 
 	for {
 		showMenu("MAIN MENU", menus, 4)
 
+<<<<<<< HEAD
 		c = inputInt("Pilih menu: ")
+=======
+		c = inputInt("Choose menu: ")
+>>>>>>> 87db5b7810d8fd3997b68d967da9695a0dad7d98
 
 		switch c {
 		case 1:
 			crudMenu()
 
 		case 2:
+<<<<<<< HEAD
 			fmt.Println("LIHAT PRODUCT")
+=======
+			fmt.Println("VIEW PRODUCT")
+>>>>>>> 87db5b7810d8fd3997b68d967da9695a0dad7d98
 
 		case 3:
 			fmt.Println("RECOMMENDATION")
@@ -273,6 +303,7 @@ func createProduct(A *ProductArray, n *int) {
 }
 
 func viewProduct(A ProductArray, n int) {
+<<<<<<< HEAD
 	var menus [5]string
 	var c, s, i int
 
@@ -319,6 +350,9 @@ func viewProduct(A ProductArray, n int) {
 	}
 
 	
+=======
+
+>>>>>>> 87db5b7810d8fd3997b68d967da9695a0dad7d98
 }
 
 func viewProductDetail(A ProductArray, n int) {
@@ -368,6 +402,7 @@ func sequentialSearchCategory(A ProductArray, n int, category string) int {
 
 // Binary Search
 func binarySearchID(A ProductArray, n int, id int) int {
+<<<<<<< HEAD
 	var left, right, mid int
 
 	left = 0
@@ -385,10 +420,13 @@ func binarySearchID(A ProductArray, n int, id int) int {
 		}
 	}
 
+=======
+>>>>>>> 87db5b7810d8fd3997b68d967da9695a0dad7d98
 	return -1
 }
 
 func binarySearchPrice(A ProductArray, n int, price int) int {
+<<<<<<< HEAD
 	var left, right, mid int
 
 	left = 0
@@ -406,6 +444,8 @@ func binarySearchPrice(A ProductArray, n int, price int) int {
 		}
 	}
 
+=======
+>>>>>>> 87db5b7810d8fd3997b68d967da9695a0dad7d98
 	return -1
 }
 
@@ -415,7 +455,11 @@ func binarySearchPrice(A ProductArray, n int, price int) int {
 
 // Insertion Sort
 func insertionSortPriceAsc(A *ProductArray, n int) {
+<<<<<<< HEAD
 	var i int
+=======
+
+>>>>>>> 87db5b7810d8fd3997b68d967da9695a0dad7d98
 }
 
 func insertionSortPriceDesc(A *ProductArray, n int) {
@@ -522,4 +566,8 @@ func printProduct(B Product) {
 func main() {
 	logo()
 	mainMenu()
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 87db5b7810d8fd3997b68d967da9695a0dad7d98
