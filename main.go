@@ -179,16 +179,16 @@ func crudMenu() {
 	var menus [5]string
 	var c int
 
-	menus[0] = "Create Product"
-	menus[1] = "Update Product"
-	menus[2] = "Delete Product"
-	menus[3] = "View Product"
-	menus[4] = "Back"
+	menus[0] = "Tambah Produk"
+	menus[1] = "Perbarui Produk"
+	menus[2] = "Hapus Produk"
+	menus[3] = "Lihat Produk"
+	menus[4] = "Kembali"
 
 	for {
 		showMenu("CRUD MENU", menus, 5)
 
-		c = inputInt("Choose menu: ")
+		c = inputInt("Pilih menu: ")
 
 		switch c {
 		case 1:
@@ -210,7 +210,7 @@ func crudMenu() {
 			return
 
 		default:
-			fmt.Println("Menu not available")
+			fmt.Println("Menu ini tidak tersedia")
 		}
 	}
 }
@@ -219,24 +219,22 @@ func mainMenu() {
 	var menus [5]string
 	var c int
 
-	menus[0] = "Manager"
-	menus[1] = "View Product"
-	menus[2] = "Recommendation"
+	menus[0] = "Kelola"
+	menus[1] = "Lihat Produk"
+	menus[2] = "Rekomendasi"
 	menus[3] = "Sales"
 
 	for {
 		showMenu("MAIN MENU", menus, 4)
 
-		c = inputInt("Choose menu: ")
-		d := 0
-		fmt.Scan(&d)
+		c = inputInt("Pilih menu: ")
 
 		switch c {
 		case 1:
 			crudMenu()
 
 		case 2:
-			fmt.Println("VIEW PRODUCT")
+			fmt.Println("LIHAT PRODUCT")
 
 		case 3:
 			fmt.Println("RECOMMENDATION")
@@ -283,6 +281,51 @@ func createProduct(A *ProductArray, n *int) {
 }
 
 func viewProduct(A ProductArray, n int) {
+	var menus [5]string
+	var c, s, i int
+
+	menus[0] = "Semua Data"
+	menus[1] = "Data Spesifik"
+	menus[2] = "Data Detail"
+	menus[3] = "Kembali"
+
+	for {
+		showMenu("View Menu", menus, 3)
+		if len(A) == 0 {
+			fmt.Println("Belum ada data")
+			return
+		} else {
+			c = inputInt("Pilih menu: ")
+
+			switch c {
+				case 1:
+					fmt.Printf("%-5s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
+					for i := 0; i < n; i++ {
+						fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+					}
+
+				case 2:
+					s = inputInt("Masukkan ID data yang ingin dilihat: ")
+					i = binarySearchID(A, n, s)
+
+					if i == -1 {
+						fmt.Println("Barang tidak ditemukan")
+						return
+					} else {
+						fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+					}
+				case 3:
+					viewProductDetail(A, n)
+				case 4:
+					return
+				default:
+					fmt.Println("Menu tidak ditemukan")
+			}
+
+
+		}
+	}
+
 
 }
 
@@ -333,10 +376,44 @@ func sequentialSearchCategory(A ProductArray, n int, category string) int {
 
 // Binary Search
 func binarySearchID(A ProductArray, n int, id int) int {
+	var left, right, mid int
+
+	left = 0
+	right = n
+
+	for left <= right {
+		mid = (left + right) / 2
+
+		if A[mid].ID == id {
+			return mid
+		} else if A[mid].ID < id {
+			left = mid + 1
+		} else {
+			right = mid - 1
+		}
+	}
+
 	return -1
 }
 
 func binarySearchPrice(A ProductArray, n int, price int) int {
+	var left, right, mid int
+
+	left = 0
+	right = n
+
+	for left <= right {
+		mid = (left + right) / 2
+
+		if A[mid].Price == price {
+			return mid
+		} else if A[mid].Price < price {
+			left = mid + 1
+		} else {
+			right = mid - 1
+		}
+	}
+
 	return -1
 }
 
