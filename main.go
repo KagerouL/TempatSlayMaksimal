@@ -80,11 +80,12 @@ type Transaction struct {
 
 type ProductList [NMAX]Product
 type TransactionList [NMAX]Transaction
-type arrProduct [NMAX]Product
+type ProductArray [NMAX]Product
 
 // ======================================================
 // UTILITY
 // ======================================================
+
 func logo() {
 	pink := "\033[38;2;245;187;212m"
 	logo := fmt.Sprintf(`
@@ -133,6 +134,13 @@ func inputInt(text string) int {
 	return x
 }
 
+func inputString(text string) string {
+	var x string
+	fmt.Print(text)
+	fmt.Scan(&x)
+	return x
+}
+
 func clearScreen() {
 
 }
@@ -141,39 +149,38 @@ func pause() {
 
 }
 
-func inputString(text string) string {
-	return ""
-}
-
 // ======================================================
 // MENU
 // ======================================================
 
 func showMenu(title string, menus [5]string, total int) {
 	var i int
+
 	fmt.Println(title)
 	line(40)
+
 	for i = 0; i < total; i++ {
 		fmt.Printf("%d. %s\n", i+1, menus[i])
 	}
+
 	fmt.Println("0. Exit")
 	line(40)
 }
 
-func menuCRUD() {
+func crudMenu() {
 	var menus [5]string
 	var c int
 
-	menus[0] = "Create Barang"
-	menus[1] = "Update Barang"
-	menus[2] = "Delete Barang"
-	menus[3] = "View Barang"
+	menus[0] = "Create Product"
+	menus[1] = "Update Product"
+	menus[2] = "Delete Product"
+	menus[3] = "View Product"
 	menus[4] = "Back"
 
 	for {
-		showMenu("MENU CRUD", menus, 5)
+		showMenu("CRUD MENU", menus, 5)
 
-		c = inputInt("Pilih menu: ")
+		c = inputInt("Choose menu: ")
 
 		switch c {
 		case 1:
@@ -195,65 +202,65 @@ func menuCRUD() {
 			return
 
 		default:
-			fmt.Println("Menu tidak tersedia")
+			fmt.Println("Menu not available")
 		}
 	}
 }
 
-func menuUtama() {
+func mainMenu() {
 	var menus [5]string
 	var c int
 
-	menus[0] = "Pengelola"
-	menus[1] = "View Barang"
-	menus[2] = "Rekomendasi"
-	menus[3] = "Penjualan"
+	menus[0] = "Manager"
+	menus[1] = "View Product"
+	menus[2] = "Recommendation"
+	menus[3] = "Sales"
 
 	for {
-		showMenu("MENU UTAMA", menus, 4)
+		showMenu("MAIN MENU", menus, 4)
 
-		c = inputInt("Pilih menu: ")
+		c = inputInt("Choose menu: ")
 
 		switch c {
 		case 1:
-			menuCRUD()
+			crudMenu()
 
 		case 2:
-			fmt.Println("VIEW BARANG")
+			fmt.Println("VIEW PRODUCT")
 
 		case 3:
-			fmt.Println("REKOMENDASI")
+			fmt.Println("RECOMMENDATION")
 
 		case 4:
-			fmt.Println("PENJUALAN")
+			fmt.Println("SALES")
 
 		case 0:
-			fmt.Println("Program selesai")
+			fmt.Println("Program finished")
 			return
 
 		default:
-			fmt.Println("Menu tidak tersedia")
+			fmt.Println("Menu not available")
 		}
 	}
 }
 
-func menuSearch(A *arrProduct, n *int) {
+func searchMenu(A *ProductArray, n *int) {
 
 }
 
-func menuSort(A *arrProduct, n *int) {
+func sortMenu(A *ProductArray, n *int) {
 
 }
 
-func menuPenjualan(A *arrProduct, n *int) {
+func salesMenu(A *ProductArray, n *int) {
 
 }
 
-func menuRekomendasi(A *arrProduct, n *int) {
+func recommendationMenu(A *ProductArray, n *int) {
 
 }
 
-func menuStatistik(A *arrProduct, n *int) {
+func statisticMenu(A *ProductArray, n *int) {
 
 }
 
@@ -261,23 +268,23 @@ func menuStatistik(A *arrProduct, n *int) {
 // CRUD
 // ======================================================
 
-func createBarang(A *arrProduct, n *int) {
+func createProduct(A *ProductArray, n *int) {
 
 }
 
-func viewBarang(A arrProduct, n int) {
+func viewProduct(A ProductArray, n int) {
 
 }
 
-func viewDetailBarang(A arrProduct, n int) {
+func viewProductDetail(A ProductArray, n int) {
 
 }
 
-func updateBarang(A *arrProduct, n int) {
+func updateProduct(A *ProductArray, n int) {
 
 }
 
-func deleteBarang(A *arrProduct, n *int) {
+func deleteProduct(A *ProductArray, n *int) {
 
 }
 
@@ -293,11 +300,11 @@ func isFull(n int) bool {
 	return false
 }
 
-func validasiHarga(harga int) bool {
+func validatePrice(price int) bool {
 	return false
 }
 
-func validasiStok(stok int) bool {
+func validateStock(stock int) bool {
 	return false
 }
 
@@ -306,20 +313,20 @@ func validasiStok(stok int) bool {
 // ======================================================
 
 // Sequential Search
-func sequentialSearchNama(A arrProduct, n int, nama string) int {
+func sequentialSearchName(A ProductArray, n int, name string) int {
 	return -1
 }
 
-func sequentialSearchKategori(A arrProduct, n int, kategori string) int {
+func sequentialSearchCategory(A ProductArray, n int, category string) int {
 	return -1
 }
 
 // Binary Search
-func binarySearchID(A arrProduct, n int, id int) int {
+func binarySearchID(A ProductArray, n int, id int) int {
 	return -1
 }
 
-func binarySearchHarga(A arrProduct, n int, harga int) int {
+func binarySearchPrice(A ProductArray, n int, price int) int {
 	return -1
 }
 
@@ -328,80 +335,80 @@ func binarySearchHarga(A arrProduct, n int, harga int) int {
 // ======================================================
 
 // Insertion Sort
-func insertionSortHargaAsc(A *arrProduct, n int) {
+func insertionSortPriceAsc(A *ProductArray, n int) {
 
 }
 
-func insertionSortHargaDesc(A *arrProduct, n int) {
+func insertionSortPriceDesc(A *ProductArray, n int) {
 
 }
 
 // Selection Sort
-func selectionSortNamaAsc(A *arrProduct, n int) {
+func selectionSortNameAsc(A *ProductArray, n int) {
 
 }
 
-func selectionSortNamaDesc(A *arrProduct, n int) {
+func selectionSortNameDesc(A *ProductArray, n int) {
 
 }
 
 // ======================================================
-// PENJUALAN
+// SALES
 // ======================================================
 
-func penjualanBarang(A *arrProduct, n int) {
+func productSales(A *ProductArray, n int) {
 
 }
 
-func checkoutBarang(A *arrProduct, n int) {
+func checkoutProduct(A *ProductArray, n int) {
 
 }
 
-func hitungTotalBelanja(A arrProduct, n int) int {
+func calculateTotalShopping(A ProductArray, n int) int {
 	return 0
 }
 
 // ======================================================
-// REKOMENDASI
+// RECOMMENDATION
 // ======================================================
 
-func rekomendasiTerlaris(A arrProduct, n int) {
+func bestSellingRecommendation(A ProductArray, n int) {
 
 }
 
-func rekomendasiStokSedikit(A arrProduct, n int) {
+func lowStockRecommendation(A ProductArray, n int) {
 
 }
 
-func rekomendasiFashionPria(A arrProduct, n int) {
+func menFashionRecommendation(A ProductArray, n int) {
 
 }
 
-func rekomendasiFashionWanita(A arrProduct, n int) {
+func womenFashionRecommendation(A ProductArray, n int) {
 
 }
 
 // ======================================================
-// STATISTIK
+// STATISTIC
 // ======================================================
 
-func totalBarang(A arrProduct, n int) int {
+func totalProduct(A ProductArray, n int) int {
 	return 0
 }
 
-func totalStok(A arrProduct, n int) int {
+func totalStock(A ProductArray, n int) int {
 	return 0
 }
 
-func totalPenjualan(A arrProduct, n int) int {
+func totalSales(A ProductArray, n int) int {
 	return 0
 }
 
-func barangPalingLaris(A arrProduct, n int) {
+func mostSoldProduct(A ProductArray, n int) {
 
 }
 
-func barangPalingSedikitTerjual(A arrProduct, n int) {
+func leastSoldProduct(A ProductArray, n int) {
 
 }
 
@@ -409,11 +416,11 @@ func barangPalingSedikitTerjual(A arrProduct, n int) {
 // HELPER
 // ======================================================
 
-func cariIndexByID(A arrProduct, n int, id int) int {
+func findIndexByID(A ProductArray, n int, id int) int {
 	return -1
 }
 
-func generateID(A arrProduct, n int) int {
+func generateID(A ProductArray, n int) int {
 	return 0
 }
 
@@ -421,18 +428,19 @@ func swap(A *Product, B *Product) {
 
 }
 
-func printHeaderTable() {
+func printTableHeader() {
 
 }
 
-func printBarang(B Product) {
+func printProduct(B Product) {
 
 }
 
 // ======================================================
 // MAIN
 // ======================================================
+
 func main() {
 	logo()
-	menuUtama()
+	mainMenu()
 }
