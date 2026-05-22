@@ -415,7 +415,7 @@ func binarySearchPrice(A ProductArray, n int, price int) int {
 
 // Insertion Sort
 func insertionSortPriceAsc(A *ProductArray, n int) {
-	
+	var i int
 }
 
 func insertionSortPriceDesc(A *ProductArray, n int) {
