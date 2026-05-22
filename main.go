@@ -3,19 +3,83 @@ package main
 //https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type+Something+&x=none&v=4&h=4&w=80&we=false
 import "fmt"
 
-type Product struct {
-	ID       int
-	name     string
-	category string
-	size     string
-	color    string
-	price    int
-	stock    int
-	sales    int
+const (
+	NMAX        int = 999
+	MAX_VARIANT int = 5
+	MAX_REVIEW  int = 10
+	MAX_ITEM    int = 10
+)
+
+type Brand struct {
+	Name    string
+	Country string
 }
 
-const NMAX int = 99999
+type Rating struct {
+	Score       float64
+	TotalReview int
+}
 
+type Review struct {
+	Username string
+	Comment  string
+	Value    int
+}
+
+type ProductDetail struct {
+	Description string
+	SkinType    string
+	ExpiredYear int
+}
+
+type Variant struct {
+	Color string
+	Size  string
+	Stock int
+}
+
+type Product struct {
+	ID       int
+	Name     string
+	Category string
+	Price    int
+	Sold     int
+
+	BrandInfo  Brand
+	RateInfo   Rating
+	DetailInfo ProductDetail
+
+	Variants     [MAX_VARIANT]Variant
+	VariantCount int
+
+	Reviews     [MAX_REVIEW]Review
+	ReviewCount int
+}
+
+type Customer struct {
+	ID    int
+	Name  string
+	Phone string
+}
+
+type SalesItem struct {
+	ProductID   int
+	ProductName string
+	Price       int
+	Quantity    int
+	Subtotal    int
+}
+
+type Transaction struct {
+	TransactionID int
+	Buyer         Customer
+	Items         [MAX_ITEM]SalesItem
+	ItemCount     int
+	TotalPayment  int
+}
+
+type ProductList [NMAX]Product
+type TransactionList [NMAX]Transaction
 type arrProduct [NMAX]Product
 
 // ======================================================
@@ -362,18 +426,6 @@ func printHeaderTable() {
 }
 
 func printBarang(B Product) {
-
-}
-
-// ======================================================
-// FILE HANDLING (OPSIONAL yo bal)
-// ======================================================
-
-func saveToFile(A arrProduct, n int) {
-
-}
-
-func loadFromFile(A *arrProduct, n *int) {
 
 }
 
