@@ -3,6 +3,24 @@ package main
 //https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type+Something+&x=none&v=4&h=4&w=80&we=false
 import "fmt"
 
+type Product struct {
+	ID       int
+	name     string
+	category string
+	size     string
+	color    string
+	price    int
+	stock    int
+	sales    int
+}
+
+const NMAX int = 99999
+
+type arrProduct [NMAX]Product
+
+// ======================================================
+// UTILITY
+// ======================================================
 func logo() {
 	pink := "\033[38;2;245;187;212m"
 	logo := fmt.Sprintf(`
@@ -50,6 +68,22 @@ func inputInt(text string) int {
 	fmt.Scan(&x)
 	return x
 }
+
+func clearScreen() {
+
+}
+
+func pause() {
+
+}
+
+func inputString(text string) string {
+	return ""
+}
+
+// ======================================================
+// MENU
+// ======================================================
 
 func showMenu(title string, menus [5]string, total int) {
 	var i int
@@ -139,6 +173,213 @@ func menuUtama() {
 	}
 }
 
+func menuSearch(A *arrProduct, n *int) {
+
+}
+
+func menuSort(A *arrProduct, n *int) {
+
+}
+
+func menuPenjualan(A *arrProduct, n *int) {
+
+}
+
+func menuRekomendasi(A *arrProduct, n *int) {
+
+}
+
+func menuStatistik(A *arrProduct, n *int) {
+
+}
+
+// ======================================================
+// CRUD
+// ======================================================
+
+func createBarang(A *arrProduct, n *int) {
+
+}
+
+func viewBarang(A arrProduct, n int) {
+
+}
+
+func viewDetailBarang(A arrProduct, n int) {
+
+}
+
+func updateBarang(A *arrProduct, n int) {
+
+}
+
+func deleteBarang(A *arrProduct, n *int) {
+
+}
+
+// ======================================================
+// VALIDATION
+// ======================================================
+
+func isEmpty(n int) bool {
+	return false
+}
+
+func isFull(n int) bool {
+	return false
+}
+
+func validasiHarga(harga int) bool {
+	return false
+}
+
+func validasiStok(stok int) bool {
+	return false
+}
+
+// ======================================================
+// SEARCHING
+// ======================================================
+
+// Sequential Search
+func sequentialSearchNama(A arrProduct, n int, nama string) int {
+	return -1
+}
+
+func sequentialSearchKategori(A arrProduct, n int, kategori string) int {
+	return -1
+}
+
+// Binary Search
+func binarySearchID(A arrProduct, n int, id int) int {
+	return -1
+}
+
+func binarySearchHarga(A arrProduct, n int, harga int) int {
+	return -1
+}
+
+// ======================================================
+// SORTING
+// ======================================================
+
+// Insertion Sort
+func insertionSortHargaAsc(A *arrProduct, n int) {
+
+}
+
+func insertionSortHargaDesc(A *arrProduct, n int) {
+
+}
+
+// Selection Sort
+func selectionSortNamaAsc(A *arrProduct, n int) {
+
+}
+
+func selectionSortNamaDesc(A *arrProduct, n int) {
+
+}
+
+// ======================================================
+// PENJUALAN
+// ======================================================
+
+func penjualanBarang(A *arrProduct, n int) {
+
+}
+
+func checkoutBarang(A *arrProduct, n int) {
+
+}
+
+func hitungTotalBelanja(A arrProduct, n int) int {
+	return 0
+}
+
+// ======================================================
+// REKOMENDASI
+// ======================================================
+
+func rekomendasiTerlaris(A arrProduct, n int) {
+
+}
+
+func rekomendasiStokSedikit(A arrProduct, n int) {
+
+}
+
+func rekomendasiFashionPria(A arrProduct, n int) {
+
+}
+
+func rekomendasiFashionWanita(A arrProduct, n int) {
+
+}
+
+// ======================================================
+// STATISTIK
+// ======================================================
+
+func totalBarang(A arrProduct, n int) int {
+	return 0
+}
+
+func totalStok(A arrProduct, n int) int {
+	return 0
+}
+
+func totalPenjualan(A arrProduct, n int) int {
+	return 0
+}
+
+func barangPalingLaris(A arrProduct, n int) {
+
+}
+
+func barangPalingSedikitTerjual(A arrProduct, n int) {
+
+}
+
+// ======================================================
+// HELPER
+// ======================================================
+
+func cariIndexByID(A arrProduct, n int, id int) int {
+	return -1
+}
+
+func generateID(A arrProduct, n int) int {
+	return 0
+}
+
+func swap(A *Product, B *Product) {
+
+}
+
+func printHeaderTable() {
+
+}
+
+func printBarang(B Product) {
+
+}
+
+// ======================================================
+// FILE HANDLING (OPSIONAL yo bal)
+// ======================================================
+
+func saveToFile(A arrProduct, n int) {
+
+}
+
+func loadFromFile(A *arrProduct, n *int) {
+
+}
+
+// ======================================================
+// MAIN
+// ======================================================
 func main() {
 	logo()
 	menuUtama()
