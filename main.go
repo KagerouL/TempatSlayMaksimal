@@ -223,6 +223,7 @@ func mainMenu() {
 	menus[1] = "Lihat Produk"
 	menus[2] = "Rekomendasi"
 	menus[3] = "Sales"
+	menus[4] = "Exit"
 
 	for {
 		showMenu("MAIN MENU", menus, 4)
@@ -277,6 +278,7 @@ func statisticMenu(A *ProductArray, n *int) {
 // ======================================================
 
 func createProduct(A *ProductArray, n *int) {
+	logo()
 
 }
 
@@ -500,6 +502,7 @@ func leastSoldProduct(A ProductArray, n int) {
 // ======================================================
 // HELPER
 // ======================================================
+
 func findIndexByID(A ProductArray, n int, id int) int {
 	var mid, left, right, isFound int
 	left = 0
@@ -538,6 +541,7 @@ func printProduct(B Product) {
 // ======================================================
 // MAIN
 // ======================================================
+
 func main() {
 	//clearScreen()
 	logo()
