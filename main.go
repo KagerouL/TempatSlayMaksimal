@@ -298,34 +298,32 @@ func viewProduct(A ProductArray, n int) {
 			c = inputInt("Pilih menu: ")
 
 			switch c {
-				case 1:
-					fmt.Printf("%-5s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
-					for i := 0; i < n; i++ {
-						fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
-					}
+			case 1:
+				fmt.Printf("%-5s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
+				for i := 0; i < n; i++ {
+					fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+				}
 
-				case 2:
-					s = inputInt("Masukkan ID data yang ingin dilihat: ")
-					i = binarySearchID(A, n, s)
+			case 2:
+				s = inputInt("Masukkan ID data yang ingin dilihat: ")
+				i = binarySearchID(A, n, s)
 
-					if i == -1 {
-						fmt.Println("Barang tidak ditemukan")
-						return
-					} else {
-						fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
-					}
-				case 3:
-					viewProductDetail(A, n)
-				case 4:
+				if i == -1 {
+					fmt.Println("Barang tidak ditemukan")
 					return
-				default:
-					fmt.Println("Menu tidak ditemukan")
+				} else {
+					fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+				}
+			case 3:
+				viewProductDetail(A, n)
+			case 4:
+				return
+			default:
+				fmt.Println("Menu tidak ditemukan")
 			}
-
 
 		}
 	}
-
 
 }
 
@@ -502,7 +500,6 @@ func leastSoldProduct(A ProductArray, n int) {
 // ======================================================
 // HELPER
 // ======================================================
-
 func findIndexByID(A ProductArray, n int, id int) int {
 	var mid, left, right, isFound int
 	left = 0
@@ -541,7 +538,6 @@ func printProduct(B Product) {
 // ======================================================
 // MAIN
 // ======================================================
-
 func main() {
 	//clearScreen()
 	logo()
