@@ -82,6 +82,9 @@ type ProductList [NMAX]Product
 type TransactionList [NMAX]Transaction
 type ProductArray [NMAX]Product
 
+var productsArr ProductArray
+var countData int
+
 // ======================================================
 // UTILITY
 // ======================================================
@@ -193,6 +196,7 @@ func crudMenu() {
 		switch c {
 		case 1:
 			fmt.Println("CREATE")
+			createProduct(&productsArr, &countData)
 
 		case 2:
 			fmt.Println("UPDATE")
@@ -279,7 +283,9 @@ func statisticMenu(A *ProductArray, n *int) {
 
 func createProduct(A *ProductArray, n *int) {
 	logo()
-
+	line(40)
+	fmt.Println("CREATE PRODUCT")
+	line(40)
 }
 
 func viewProduct(A ProductArray, n int) {
