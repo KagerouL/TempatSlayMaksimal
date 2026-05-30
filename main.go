@@ -281,44 +281,42 @@ func viewProduct(A ProductArray, n int) {
 	menus[2] = "Data Detail"
 	menus[3] = "Kembali"
 
-	for { 
+	for {
 		showMenu("View Menu", menus, 3)
 		if len(A) == 0 {
 			fmt.Println("Belum ada data")
 			return
 		} else {
 			c = inputInt("Pilih menu: ")
-			
-			switch c {
-				case 1: 
-					fmt.Printf("%-5s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
-					for i := 0; i < n; i++ {
-						fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
-					}
-				
-				case 2:
-					s = inputInt("Masukkan ID data yang ingin dilihat: ")
-					i = binarySearchID(A, n, s)
 
-					if i == -1 {
-						fmt.Println("Barang tidak ditemukan")
-						return
-					} else {
-						fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
-					}
-				case 3: 
-					viewProductDetail(A, n)
-				case 4: 
+			switch c {
+			case 1:
+				fmt.Printf("%-5s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
+				for i := 0; i < n; i++ {
+					fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+				}
+
+			case 2:
+				s = inputInt("Masukkan ID data yang ingin dilihat: ")
+				i = binarySearchID(A, n, s)
+
+				if i == -1 {
+					fmt.Println("Barang tidak ditemukan")
 					return
-				default:
-					fmt.Println("Menu tidak ditemukan")
+				} else {
+					fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+				}
+			case 3:
+				viewProductDetail(A, n)
+			case 4:
+				return
+			default:
+				fmt.Println("Menu tidak ditemukan")
 			}
 
-			
 		}
 	}
 
-	
 }
 
 func viewProductDetail(A ProductArray, n int) {
@@ -338,6 +336,7 @@ func deleteProduct(A *ProductArray, n *int) {
 // ======================================================
 
 func isEmpty(n int) bool {
+
 	return false
 }
 
@@ -346,10 +345,18 @@ func isFull(n int) bool {
 }
 
 func validatePrice(price int) bool {
+	if price > 0 {
+		return true
+	} 
+
 	return false
 }
 
 func validateStock(stock int) bool {
+	if stock >= 0 {
+		return true
+	}
+
 	return false
 }
 
@@ -359,10 +366,22 @@ func validateStock(stock int) bool {
 
 // Sequential Search
 func sequentialSearchName(A ProductArray, n int, name string) int {
+	for i := 0; i < n; i++ {
+		if A[i].Name == name {
+			return i
+		}
+	}
+
 	return -1
 }
 
 func sequentialSearchCategory(A ProductArray, n int, category string) int {
+	for i := 0; i < n; i++ {
+		if A[i].Category == category {
+			return i
+		}
+	}
+
 	return -1
 }
 
@@ -374,7 +393,7 @@ func binarySearchID(A ProductArray, n int, id int) int {
 	right = n
 
 	for left <= right {
-		mid = (left + right) / 2 
+		mid = (left + right) / 2
 
 		if A[mid].ID == id {
 			return mid
@@ -395,7 +414,7 @@ func binarySearchPrice(A ProductArray, n int, price int) int {
 	right = n
 
 	for left <= right {
-		mid = (left + right) / 2 
+		mid = (left + right) / 2
 
 		if A[mid].Price == price {
 			return mid
@@ -415,19 +434,84 @@ func binarySearchPrice(A ProductArray, n int, price int) int {
 
 // Insertion Sort
 func insertionSortPriceAsc(A *ProductArray, n int) {
+	var i, j int
+	var temp Product
+
+	i = 0
+
+	for i <= n - 1 {
+		j = i
+		temp = A[j]
+
+		for j > 0 && temp.Price < A[j-1].Price {
+			A[j] = A[j-1]
+			j = j - 1
+		}
+		A[j] = temp
+		i = i + 1
+	}
 }
 
 func insertionSortPriceDesc(A *ProductArray, n int) {
+	var i, j int
+	var temp Product
 
+	i = 0
+
+	for i <= n - 1 {
+		j = i
+		temp = A[j]
+
+		for j > 0 && temp.Price > A[j-1].Price {
+			A[j] = A[j-1]
+			j = j - 1
+		}
+		A[j] = temp
+		i = i + 1
+	}
 }
 
 // Selection Sort
 func selectionSortNameAsc(A *ProductArray, n int) {
+	var idxMin, j, i int
+	var temp Product
 
+	for i <= n {
+		idxMin = i
+		j = i
+
+		for j > n {
+			if A[idxMin].Name > A[j].Name {
+				idxMin = j
+			}
+			j++
+		}
+		temp = A[idxMin]
+		A[idxMin] = A[i]
+		A[i] = temp
+		i++
+	}
 }
 
 func selectionSortNameDesc(A *ProductArray, n int) {
+	var idxMax, j, i int
+	var temp Product
 
+	for i <= n {
+		idxMax = n
+		j = i
+
+		for j < n {
+			if A[idxMax].Name < A[j].Name {
+				idxMax = j
+			}
+			j++
+		}
+		temp = A[idxMax]
+		A[idxMax] = A[i]
+		A[i] = temp
+		i++
+	}
 }
 
 // ======================================================
@@ -471,6 +555,8 @@ func womenFashionRecommendation(A ProductArray, n int) {
 // ======================================================
 
 func totalProduct(A ProductArray, n int) int {
+	
+
 	return 0
 }
 
@@ -495,14 +581,23 @@ func leastSoldProduct(A ProductArray, n int) {
 // ======================================================
 
 func findIndexByID(A ProductArray, n int, id int) int {
+
+
 	return -1
 }
 
 func generateID(A ProductArray, n int) int {
+	for i := 0; i < n + 1; i++ {
+		if A[i].ID != i {
+			return i
+		}
+	}
+
 	return 0
 }
 
 func swap(A *Product, B *Product) {
+	var temp Product
 
 }
 
