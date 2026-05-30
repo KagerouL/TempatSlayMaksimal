@@ -196,7 +196,7 @@ func crudMenu() {
 		switch c {
 		case 1:
 			fmt.Println("CREATE")
-			createProduct(&productsArr, &countData)
+			createProduct(&productsArr)
 
 		case 2:
 			fmt.Println("UPDATE")
@@ -281,11 +281,81 @@ func statisticMenu(A *ProductArray, n *int) {
 // CRUD
 // ======================================================
 
-func createProduct(A *ProductArray, n *int) {
+func createProduct(A *ProductArray) {
+	var i int
+
 	logo()
 	line(40)
-	fmt.Println("CREATE PRODUCT")
+	fmt.Println("TAMBAH PRODUK")
 	line(40)
+
+	if countData >= NMAX {
+		fmt.Println("Data produk penuh!")
+		return
+	}
+
+	// Auto Generate ID ini ball, jadi ID akan selalu bertambah meskipun ada data yang dihapus
+	A[countData].ID = countData + 1
+
+	fmt.Print("Nama Produk        : ")
+	fmt.Scan(&A[countData].Name)
+
+	fmt.Print("Kategori           : ")
+	fmt.Scan(&A[countData].Category)
+
+	fmt.Print("Harga              : ")
+	fmt.Scan(&A[countData].Price)
+
+	fmt.Print("Nama Brand         : ")
+	fmt.Scan(&A[countData].BrandInfo.Name)
+
+	fmt.Print("Negara Asal Brand  : ")
+	fmt.Scan(&A[countData].BrandInfo.Country)
+
+	fmt.Print("Deskripsi Produk   : ")
+	fmt.Scan(&A[countData].DetailInfo.Description)
+
+	fmt.Print("Jenis Kulit        : ")
+	fmt.Scan(&A[countData].DetailInfo.SkinType)
+
+	fmt.Print("Tahun Kedaluwarsa  : ")
+	fmt.Scan(&A[countData].DetailInfo.ExpiredYear)
+
+	fmt.Print("Jumlah Varian (1-5): ")
+	fmt.Scan(&A[countData].VariantCount)
+
+	if A[countData].VariantCount < 1 {
+		A[countData].VariantCount = 1
+	}
+
+	if A[countData].VariantCount > MAX_VARIANT {
+		A[countData].VariantCount = MAX_VARIANT
+	}
+
+	for i = 0; i < A[countData].VariantCount; i++ {
+		fmt.Println()
+		fmt.Println("Varian", i+1)
+
+		fmt.Print("Warna : ")
+		fmt.Scan(&A[countData].Variants[i].Color)
+
+		fmt.Print("Ukuran: ")
+		fmt.Scan(&A[countData].Variants[i].Size)
+
+		fmt.Print("Stok  : ")
+		fmt.Scan(&A[countData].Variants[i].Stock)
+	}
+
+	// Nilai default
+	A[countData].Sold = 0
+	A[countData].RateInfo.Score = 0
+	A[countData].RateInfo.TotalReview = 0
+	A[countData].ReviewCount = 0
+
+	countData = countData + 1
+
+	fmt.Println()
+	fmt.Println("Produk berhasil ditambahkan!")
 }
 
 func viewProduct(A ProductArray, n int) {
