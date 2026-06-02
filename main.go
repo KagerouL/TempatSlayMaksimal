@@ -579,25 +579,13 @@ func leastSoldProduct(A ProductArray, n int) {
 // ======================================================
 // HELPER
 // ======================================================
+func generateID(A ProductArray, n int) string {
+	
 
-func findIndexByID(A ProductArray, n int, id int) int {
-
-
-	return -1
-}
-
-func generateID(A ProductArray, n int) int {
-	for i := 0; i < n + 1; i++ {
-		if A[i].ID != i {
-			return i
-		}
-	}
-
-	return 0
+	
 }
 
 func swap(A *Product, B *Product) {
-	var temp Product
 
 }
 
