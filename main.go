@@ -82,14 +82,24 @@ type ProductList [NMAX]Product
 type TransactionList [NMAX]Transaction
 type ProductArray [NMAX]Product
 
+var productsArr ProductArray
+var countData int
+
 // ======================================================
 // UTILITY
 // ======================================================
 
 func logo() {
-	pink := "\033[38;2;245;187;212m"
-	logo := fmt.Sprintf(`
+	var pink, logo string
+	pink = "\033[38;2;245;187;212m"
+	logo = fmt.Sprintf(`
 %s
+0110101010110101010101010 1 0 10101 011 0101 1 1 01 1 10 1 1 1 101 1 01 01 1 01 1 01
+10010      10101 10 1 1 0     10 10 01  10   0 0 10 1 00 0 1 0 010 0 10 0  0 0  0
+  001       011  0  0  0      0  1  1    1       1  0  1 0 1    1  1  1 0  1 0  1
+   1         0   1     0         0       1          0      1       0    1    0  1
+             1                           0                                      1
+             0                           1
       _____                    _____                    _____          
      /\    \                  /\    \                  /\    \         
     /::\    \                /::\    \                /::\____\        
@@ -118,6 +128,11 @@ func logo() {
 `, pink)
 	fmt.Println(logo)
 }
+func title(text string) {
+	line(40)
+	fmt.Printf("|%26s%-12s|\n", text, "")
+	line(40)
+}
 
 func line(n int) {
 	var i int
@@ -127,11 +142,23 @@ func line(n int) {
 	fmt.Println()
 }
 
-func inputInt(text string) int {
-	var x int
-	fmt.Print(text)
-	fmt.Scan(&x)
-	return x
+func inputInt(prompt string) int {
+	var value int
+	var err error
+
+	for {
+		fmt.Print(prompt)
+		_, err = fmt.Scan(&value)
+		if err != nil {
+			warningMessage("Input harus berupa angka!")
+			continue
+		}
+		if value < 0 {
+			warningMessage("Input tidak boleh negatif!")
+			continue
+		}
+		return value
+	}
 }
 
 func inputString(text string) string {
@@ -142,7 +169,7 @@ func inputString(text string) string {
 }
 
 func clearScreen() {
-
+	fmt.Print("\033[H\033[2J")
 }
 
 func pause() {
@@ -168,6 +195,7 @@ func showMenu(title string, menus [5]string, total int) {
 }
 
 func crudMenu() {
+	logo()
 	var menus [5]string
 	var c int
 
@@ -185,6 +213,7 @@ func crudMenu() {
 		switch c {
 		case 1:
 			fmt.Println("CREATE")
+			createProduct(&productsArr)
 
 		case 2:
 			fmt.Println("UPDATE")
@@ -196,7 +225,7 @@ func crudMenu() {
 			fmt.Println("VIEW")
 
 		case 5:
-			return
+			clearScreen()
 
 		case 0:
 			return
@@ -215,6 +244,7 @@ func mainMenu() {
 	menus[1] = "Lihat Produk"
 	menus[2] = "Rekomendasi"
 	menus[3] = "Sales"
+	menus[4] = "Exit"
 
 	for {
 		showMenu("MAIN MENU", menus, 4)
@@ -268,8 +298,58 @@ func statisticMenu(A *ProductArray, n *int) {
 // CRUD
 // ======================================================
 
-func createProduct(A *ProductArray, n *int) {
+func createProduct(data *ProductArray) {
+	var i int
 
+	logo()
+	title("TAMBAH PRODUK")
+
+	if countData >= NMAX {
+		fmt.Println("Data produk penuh!")
+		return
+	}
+
+	data[countData].ID = countData + 1
+
+	data[countData].Name = inputString("Nama Produk        : ")
+	data[countData].Category = inputString("Kategori           : ")
+	data[countData].Price = inputInt("Harga              : ")
+
+	data[countData].BrandInfo.Name = inputString("Nama Brand         : ")
+	data[countData].BrandInfo.Country = inputString("Negara datasal Brand  : ")
+
+	data[countData].DetailInfo.Description = inputString("Deskripsi Produk   : ")
+	data[countData].DetailInfo.SkinType = inputString("Jenis Kulit        : ")
+	data[countData].DetailInfo.ExpiredYear = inputInt("Tahun Kedaluwarsa  : ")
+
+	data[countData].VariantCount = inputInt("Jumlah Varian (1-5): ")
+
+	if data[countData].VariantCount < 1 {
+		data[countData].VariantCount = 1
+	}
+
+	if data[countData].VariantCount > MAX_VARIANT {
+		data[countData].VariantCount = MAX_VARIANT
+	}
+
+	for i = 0; i < data[countData].VariantCount; i++ {
+		fmt.Println()
+		fmt.Println("Varian", i+1)
+
+		data[countData].Variants[i].Color = inputString("Warna  : ")
+		data[countData].Variants[i].Size = inputString("Ukuran : ")
+		data[countData].Variants[i].Stock = inputInt("Stok   : ")
+	}
+
+	data[countData].Sold = 0
+	data[countData].RateInfo.Score = 0
+	data[countData].RateInfo.TotalReview = 0
+	data[countData].ReviewCount = 0
+
+	countData++
+
+	fmt.Println()
+	fmt.Println("Produk berhasil ditambahkan!")
 }
 
 func viewProduct(A ProductArray, n int) {
@@ -336,7 +416,6 @@ func deleteProduct(A *ProductArray, n *int) {
 // ======================================================
 
 func isEmpty(n int) bool {
-
 	return false
 }
 
@@ -347,7 +426,7 @@ func isFull(n int) bool {
 func validatePrice(price int) bool {
 	if price > 0 {
 		return true
-	} 
+	}
 
 	return false
 }
@@ -439,7 +518,7 @@ func insertionSortPriceAsc(A *ProductArray, n int) {
 
 	i = 0
 
-	for i <= n - 1 {
+	for i <= n-1 {
 		j = i
 		temp = A[j]
 
@@ -458,7 +537,7 @@ func insertionSortPriceDesc(A *ProductArray, n int) {
 
 	i = 0
 
-	for i <= n - 1 {
+	for i <= n-1 {
 		j = i
 		temp = A[j]
 
@@ -555,8 +634,6 @@ func womenFashionRecommendation(A ProductArray, n int) {
 // ======================================================
 
 func totalProduct(A ProductArray, n int) int {
-	
-
 	return 0
 }
 
@@ -583,6 +660,52 @@ func generateID(A ProductArray, n int) string {
 	
 
 	
+
+func errorMessage(message string) {
+	title("ERROR >_<")
+	fmt.Println(message)
+	line(40)
+}
+
+func successMessage(message string) {
+	title("SUCCESS <3")
+	fmt.Println(message)
+	line(40)
+}
+
+func warningMessage(message string) {
+	title("WARNING -_-")
+	fmt.Println(message)
+	line(40)
+}
+
+func findIndexByID(A ProductArray, n int, id int) int {
+	var mid, left, right, isFound int
+	left = 0
+	right = n
+	isFound = -1
+	for left < right && isFound == -1 {
+		mid = (left + right) / 2
+		if id == A[mid].ID {
+			isFound = mid
+		}
+		if id > A[mid].ID {
+			right = mid - 1
+		} else if id < A[mid].ID {
+			left = mid + 1
+		}
+	}
+	return -1
+}
+
+func generateID(A ProductArray, n int) int {
+	for i := 0; i < n+1; i++ {
+		if A[i].ID != i {
+			return i
+		}
+	}
+
+	return 0
 }
 
 func swap(A *Product, B *Product) {
@@ -602,6 +725,7 @@ func printProduct(B Product) {
 // ======================================================
 
 func main() {
+	//clearScreen()
 	logo()
 	mainMenu()
 }
