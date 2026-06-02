@@ -39,7 +39,7 @@ type Variant struct {
 }
 
 type Product struct {
-	ID       int
+	ID       string
 	Name     string
 	Category string
 	Price    int
@@ -646,7 +646,14 @@ func totalSales(A ProductArray, n int) int {
 }
 
 func mostSoldProduct(A ProductArray, n int) {
+	var most int
+	for i := 0; i < n; i++ {
+		if A[i].Sold > most {
+			most = i
+		}
+	}
 
+	
 }
 
 func leastSoldProduct(A ProductArray, n int) {
@@ -656,10 +663,6 @@ func leastSoldProduct(A ProductArray, n int) {
 // ======================================================
 // HELPER
 // ======================================================
-func generateID(A ProductArray, n int) string {
-	
-
-	
 
 func errorMessage(message string) {
 	title("ERROR >_<")
@@ -698,14 +701,8 @@ func findIndexByID(A ProductArray, n int, id int) int {
 	return -1
 }
 
-func generateID(A ProductArray, n int) int {
-	for i := 0; i < n+1; i++ {
-		if A[i].ID != i {
-			return i
-		}
-	}
+func generateID(A ProductArray, n int) string {
 
-	return 0
 }
 
 func swap(A *Product, B *Product) {
