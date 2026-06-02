@@ -275,7 +275,7 @@ func statisticMenu(A *ProductArray, n *int) {
 // ======================================================
 
 func createProduct(data *ProductArray) {
-	var i int
+	var i, variantCount int
 
 	logo()
 	title("TAMBAH PRODUK")
@@ -298,7 +298,12 @@ func createProduct(data *ProductArray) {
 	data[countData].DetailInfo.SkinType = inputString("Jenis Kulit        : ")
 	data[countData].DetailInfo.ExpiredYear = inputInt("Tahun Kedaluwarsa  : ")
 
-	data[countData].VariantCount = inputInt("Jumlah Varian (1-5): ")
+	variantCount = inputInt("Jumlah Varian (1-5): ")
+	for variantCount < 1 || variantCount > MAX_VARIANT {
+		warningMessage("Jumlah varian tidak boleh kurang dari 1!")
+		variantCount = inputInt("Jumlah Varian (1-5): ")
+	}
+	data[countData].VariantCount = variantCount
 
 	if data[countData].VariantCount < 1 {
 		data[countData].VariantCount = 1
