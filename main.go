@@ -128,6 +128,11 @@ func logo() {
 `, pink)
 	fmt.Println(logo)
 }
+func title(text string) {
+	line(40)
+	fmt.Printf("|%26s%-12s|\n", text, "")
+	line(40)
+}
 
 func line(n int) {
 	var i int
@@ -137,11 +142,23 @@ func line(n int) {
 	fmt.Println()
 }
 
-func inputInt(text string) int {
-	var x int
-	fmt.Print(text)
-	fmt.Scan(&x)
-	return x
+func inputInt(prompt string) int {
+	var value int
+	var err error
+
+	for {
+		fmt.Print(prompt)
+		_, err = fmt.Scan(&value)
+		if err != nil {
+			warningMessage("Input harus berupa angka!")
+			continue
+		}
+		if value < 0 {
+			warningMessage("Input tidak boleh negatif!")
+			continue
+		}
+		return value
+	}
 }
 
 func inputString(text string) string {
@@ -281,78 +298,55 @@ func statisticMenu(A *ProductArray, n *int) {
 // CRUD
 // ======================================================
 
-func createProduct(A *ProductArray) {
+func createProduct(data *ProductArray) {
 	var i int
 
 	logo()
-	line(40)
-	fmt.Println("TAMBAH PRODUK")
-	line(40)
+	title("TAMBAH PRODUK")
 
 	if countData >= NMAX {
 		fmt.Println("Data produk penuh!")
 		return
 	}
 
-	// Auto Generate ID ini ball, jadi ID akan selalu bertambah meskipun ada data yang dihapus
-	A[countData].ID = countData + 1
+	data[countData].ID = countData + 1
 
-	fmt.Print("Nama Produk        : ")
-	fmt.Scan(&A[countData].Name)
+	data[countData].Name = inputString("Nama Produk        : ")
+	data[countData].Category = inputString("Kategori           : ")
+	data[countData].Price = inputInt("Harga              : ")
 
-	fmt.Print("Kategori           : ")
-	fmt.Scan(&A[countData].Category)
+	data[countData].BrandInfo.Name = inputString("Nama Brand         : ")
+	data[countData].BrandInfo.Country = inputString("Negara datasal Brand  : ")
 
-	fmt.Print("Harga              : ")
-	fmt.Scan(&A[countData].Price)
+	data[countData].DetailInfo.Description = inputString("Deskripsi Produk   : ")
+	data[countData].DetailInfo.SkinType = inputString("Jenis Kulit        : ")
+	data[countData].DetailInfo.ExpiredYear = inputInt("Tahun Kedaluwarsa  : ")
 
-	fmt.Print("Nama Brand         : ")
-	fmt.Scan(&A[countData].BrandInfo.Name)
+	data[countData].VariantCount = inputInt("Jumlah Varian (1-5): ")
 
-	fmt.Print("Negara Asal Brand  : ")
-	fmt.Scan(&A[countData].BrandInfo.Country)
-
-	fmt.Print("Deskripsi Produk   : ")
-	fmt.Scan(&A[countData].DetailInfo.Description)
-
-	fmt.Print("Jenis Kulit        : ")
-	fmt.Scan(&A[countData].DetailInfo.SkinType)
-
-	fmt.Print("Tahun Kedaluwarsa  : ")
-	fmt.Scan(&A[countData].DetailInfo.ExpiredYear)
-
-	fmt.Print("Jumlah Varian (1-5): ")
-	fmt.Scan(&A[countData].VariantCount)
-
-	if A[countData].VariantCount < 1 {
-		A[countData].VariantCount = 1
+	if data[countData].VariantCount < 1 {
+		data[countData].VariantCount = 1
 	}
 
-	if A[countData].VariantCount > MAX_VARIANT {
-		A[countData].VariantCount = MAX_VARIANT
+	if data[countData].VariantCount > MAX_VARIANT {
+		data[countData].VariantCount = MAX_VARIANT
 	}
 
-	for i = 0; i < A[countData].VariantCount; i++ {
+	for i = 0; i < data[countData].VariantCount; i++ {
 		fmt.Println()
 		fmt.Println("Varian", i+1)
 
-		fmt.Print("Warna : ")
-		fmt.Scan(&A[countData].Variants[i].Color)
-
-		fmt.Print("Ukuran: ")
-		fmt.Scan(&A[countData].Variants[i].Size)
-
-		fmt.Print("Stok  : ")
-		fmt.Scan(&A[countData].Variants[i].Stock)
+		data[countData].Variants[i].Color = inputString("Warna  : ")
+		data[countData].Variants[i].Size = inputString("Ukuran : ")
+		data[countData].Variants[i].Stock = inputInt("Stok   : ")
 	}
 
-	// Nilai default
-	A[countData].Sold = 0
-	A[countData].RateInfo.Score = 0
-	A[countData].RateInfo.TotalReview = 0
-	A[countData].ReviewCount = 0
+	data[countData].Sold = 0
+	data[countData].RateInfo.Score = 0
+	data[countData].RateInfo.TotalReview = 0
+	data[countData].ReviewCount = 0
 
-	countData = countData + 1
+	countData++
 
 	fmt.Println()
 	fmt.Println("Produk berhasil ditambahkan!")
@@ -430,10 +424,18 @@ func isFull(n int) bool {
 }
 
 func validatePrice(price int) bool {
+	if price > 0 {
+		return true
+	}
+
 	return false
 }
 
 func validateStock(stock int) bool {
+	if stock >= 0 {
+		return true
+	}
+
 	return false
 }
 
@@ -443,10 +445,22 @@ func validateStock(stock int) bool {
 
 // Sequential Search
 func sequentialSearchName(A ProductArray, n int, name string) int {
+	for i := 0; i < n; i++ {
+		if A[i].Name == name {
+			return i
+		}
+	}
+
 	return -1
 }
 
 func sequentialSearchCategory(A ProductArray, n int, category string) int {
+	for i := 0; i < n; i++ {
+		if A[i].Category == category {
+			return i
+		}
+	}
+
 	return -1
 }
 
@@ -499,20 +513,84 @@ func binarySearchPrice(A ProductArray, n int, price int) int {
 
 // Insertion Sort
 func insertionSortPriceAsc(A *ProductArray, n int) {
+	var i, j int
+	var temp Product
 
+	i = 0
+
+	for i <= n-1 {
+		j = i
+		temp = A[j]
+
+		for j > 0 && temp.Price < A[j-1].Price {
+			A[j] = A[j-1]
+			j = j - 1
+		}
+		A[j] = temp
+		i = i + 1
+	}
 }
 
 func insertionSortPriceDesc(A *ProductArray, n int) {
+	var i, j int
+	var temp Product
 
+	i = 0
+
+	for i <= n-1 {
+		j = i
+		temp = A[j]
+
+		for j > 0 && temp.Price > A[j-1].Price {
+			A[j] = A[j-1]
+			j = j - 1
+		}
+		A[j] = temp
+		i = i + 1
+	}
 }
 
 // Selection Sort
 func selectionSortNameAsc(A *ProductArray, n int) {
+	var idxMin, j, i int
+	var temp Product
 
+	for i <= n {
+		idxMin = i
+		j = i
+
+		for j > n {
+			if A[idxMin].Name > A[j].Name {
+				idxMin = j
+			}
+			j++
+		}
+		temp = A[idxMin]
+		A[idxMin] = A[i]
+		A[i] = temp
+		i++
+	}
 }
 
 func selectionSortNameDesc(A *ProductArray, n int) {
+	var idxMax, j, i int
+	var temp Product
 
+	for i <= n {
+		idxMax = n
+		j = i
+
+		for j < n {
+			if A[idxMax].Name < A[j].Name {
+				idxMax = j
+			}
+			j++
+		}
+		temp = A[idxMax]
+		A[idxMax] = A[i]
+		A[i] = temp
+		i++
+	}
 }
 
 // ======================================================
@@ -579,6 +657,24 @@ func leastSoldProduct(A ProductArray, n int) {
 // HELPER
 // ======================================================
 
+func errorMessage(message string) {
+	title("ERROR >_<")
+	fmt.Println(message)
+	line(40)
+}
+
+func successMessage(message string) {
+	title("SUCCESS <3")
+	fmt.Println(message)
+	line(40)
+}
+
+func warningMessage(message string) {
+	title("WARNING -_-")
+	fmt.Println(message)
+	line(40)
+}
+
 func findIndexByID(A ProductArray, n int, id int) int {
 	var mid, left, right, isFound int
 	left = 0
@@ -599,11 +695,16 @@ func findIndexByID(A ProductArray, n int, id int) int {
 }
 
 func generateID(A ProductArray, n int) int {
+	for i := 0; i < n+1; i++ {
+		if A[i].ID != i {
+			return i
+		}
+	}
+
 	return 0
 }
 
 func swap(A *Product, B *Product) {
-
 }
 
 func printTableHeader() {
