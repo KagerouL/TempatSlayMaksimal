@@ -56,34 +56,12 @@ type Product struct {
 	ReviewCount int
 }
 
-type Customer struct {
-	ID    int
-	Name  string
-	Phone string
-}
-
-type SalesItem struct {
-	ProductID   int
-	ProductName string
-	Price       int
-	Quantity    int
-	Subtotal    int
-}
-
-type Transaction struct {
-	TransactionID int
-	Buyer         Customer
-	Items         [MAX_ITEM]SalesItem
-	ItemCount     int
-	TotalPayment  int
-}
-
 type ProductList [NMAX]Product
-type TransactionList [NMAX]Transaction
 type ProductArray [NMAX]Product
 
 var productsArr ProductArray
 var countData int
+var historyCountData int
 
 // ======================================================
 // UTILITY
@@ -190,7 +168,7 @@ func showMenu(title string, menus [5]string, total int) {
 		fmt.Printf("%d. %s\n", i+1, menus[i])
 	}
 
-	fmt.Println("0. Exit")
+	fmt.Println("0. Kembali")
 	line(40)
 }
 
@@ -244,7 +222,6 @@ func mainMenu() {
 	menus[1] = "Lihat Produk"
 	menus[2] = "Rekomendasi"
 	menus[3] = "Sales"
-	menus[4] = "Exit"
 
 	for {
 		showMenu("MAIN MENU", menus, 4)
@@ -256,8 +233,7 @@ func mainMenu() {
 			crudMenu()
 
 		case 2:
-			fmt.Println("LIHAT PRODUCT")
-
+			viewProduct(productsArr, countData)
 		case 3:
 			fmt.Println("RECOMMENDATION")
 
@@ -309,7 +285,7 @@ func createProduct(data *ProductArray) {
 		return
 	}
 
-	data[countData].ID = countData + 1
+	data[countData].ID = generateID(*data)
 
 	data[countData].Name = inputString("Nama Produk        : ")
 	data[countData].Category = inputString("Kategori           : ")
@@ -354,12 +330,12 @@ func createProduct(data *ProductArray) {
 
 func viewProduct(A ProductArray, n int) {
 	var menus [5]string
-	var c, s, i int
+	var c, i int
+	var s string
 
 	menus[0] = "Semua Data"
 	menus[1] = "Data Spesifik"
 	menus[2] = "Data Detail"
-	menus[3] = "Kembali"
 
 	for {
 		showMenu("View Menu", menus, 3)
@@ -371,24 +347,25 @@ func viewProduct(A ProductArray, n int) {
 
 			switch c {
 			case 1:
-				fmt.Printf("%-5s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
+				fmt.Printf("%-10s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
 				for i := 0; i < n; i++ {
-					fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+					fmt.Printf("%-10s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
 				}
-
 			case 2:
-				s = inputInt("Masukkan ID data yang ingin dilihat: ")
+				s = inputString("Masukkan ID data yang ingin dilihat: ")
 				i = binarySearchID(A, n, s)
 
 				if i == -1 {
 					fmt.Println("Barang tidak ditemukan")
 					return
 				} else {
-					fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+					fmt.Printf("%-10s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
 				}
 			case 3:
 				viewProductDetail(A, n)
 			case 4:
+				return
+			case 0:
 				return
 			default:
 				fmt.Println("Menu tidak ditemukan")
@@ -465,7 +442,7 @@ func sequentialSearchCategory(A ProductArray, n int, category string) int {
 }
 
 // Binary Search
-func binarySearchID(A ProductArray, n int, id int) int {
+func binarySearchID(A ProductArray, n int, id string) int {
 	var left, right, mid int
 
 	left = 0
@@ -653,11 +630,19 @@ func mostSoldProduct(A ProductArray, n int) {
 		}
 	}
 
-	
+	fmt.Printf("Barang paling laku: %s\n Total pembelian: %d", A[most].Name, A[most].Sold)
+
 }
 
 func leastSoldProduct(A ProductArray, n int) {
+	var least int
+	for i := 0; i < n; i++ {
+		if A[i].Sold > least {
+			least = i
+		}
+	}
 
+	fmt.Printf("Barang paling laku: %s\n Total pembelian: %d", A[least].Name, A[least].Sold)
 }
 
 // ======================================================
@@ -682,7 +667,7 @@ func warningMessage(message string) {
 	line(40)
 }
 
-func findIndexByID(A ProductArray, n int, id int) int {
+func findIndexByID(A ProductArray, n int, id string) int {
 	var mid, left, right, isFound int
 	left = 0
 	right = n
@@ -701,8 +686,8 @@ func findIndexByID(A ProductArray, n int, id int) int {
 	return -1
 }
 
-func generateID(A ProductArray, n int) string {
-
+func generateID(A ProductArray) string {
+	return "TSM" + fmt.Sprintf("%03d", historyCountData+1)
 }
 
 func swap(A *Product, B *Product) {
