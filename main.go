@@ -107,10 +107,10 @@ func logo() {
 	fmt.Println(logo)
 }
 func title(text string) {
-	line(40)
-	printCenter("Anda Berada Di ", 40)
-	printCenter(text, 40)
-	line(40)
+	line(52)
+	printCenter("ANDA BERADA DI", 50)
+	printCenter(text, 50)
+	line(52)
 }
 
 func line(n int) {
@@ -195,7 +195,7 @@ func crudMenu() {
 			fmt.Println("UPDATE")
 
 		case 3:
-			fmt.Println("DELETE")
+			deleteProduct(&productsArr)
 
 		case 4:
 			fmt.Println("VIEW")
@@ -327,6 +327,7 @@ func createProduct(data *ProductArray) {
 	data[countData].ReviewCount = 0
 
 	countData++
+	historyCountData++
 
 	fmt.Println()
 	logo()
@@ -389,8 +390,36 @@ func updateProduct(A *ProductArray, n int) {
 
 }
 
-func deleteProduct(A *ProductArray, n *int) {
+func deleteProduct(A *ProductArray) {
+	var id string
+	var i int
+	title("MENU HAPUS")
+	id = inputString("Masukan ID yang ingin dihapus: ")
+	if id == "batal" {
+		crudMenu()
+	}
+	if countData == 0 {
+		warningMessage("Tidak ada data")
+		crudMenu()
+	} else {
+		for findIndexByID(productsArr, id) == -1 {
+			warningMessage("ID yang anda masukan tidak ada!!!")
+			id = inputString("Masukan ID yang ingin dihapus: ")
+			if id == "batal" {
+				crudMenu()
+			}
+		}
+	}
 
+	if id == A[countData].ID {
+		countData--
+	} else {
+		i = findIndexByID(productsArr, id)
+		for i < countData {
+			(*A)[i] = A[i+1]
+		}
+		countData--
+	}
 }
 
 // ======================================================
@@ -693,10 +722,10 @@ func warningMessage(message string) {
 	fmt.Println()
 }
 
-func findIndexByID(A ProductArray, n int, id string) int {
+func findIndexByID(A ProductArray, id string) int {
 	var mid, left, right, isFound int
 	left = 0
-	right = n
+	right = countData
 	isFound = -1
 	for left < right && isFound == -1 {
 		mid = (left + right) / 2
@@ -733,7 +762,6 @@ func printProduct(B Product) {
 // ======================================================
 
 func main() {
-	//clearScreen()
 	logo()
 	mainMenu()
 }
