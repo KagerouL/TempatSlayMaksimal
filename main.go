@@ -382,7 +382,7 @@ func viewProduct(A ProductArray, n int) {
 }
 
 func viewProductDetail(A ProductArray, n int) {
-
+	
 }
 
 func updateProduct(A *ProductArray, n int) {
