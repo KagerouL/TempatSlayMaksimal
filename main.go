@@ -190,10 +190,7 @@ func crudMenu() {
 
 		switch c {
 		case 1:
-			fmt.Println("CREATE")
-
 			createProduct(&productsArr)
-
 		case 2:
 			fmt.Println("UPDATE")
 
@@ -276,6 +273,7 @@ func statisticMenu(A *ProductArray, n *int) {
 // ======================================================
 
 func createProduct(data *ProductArray) {
+	title("TAMBAH PRODUK")
 	var i, variantCount int
 
 	logo()
@@ -354,11 +352,10 @@ func viewProduct(A ProductArray, n int) {
 
 			switch c {
 			case 1:
-				fmt.Printf("%-5s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
+				fmt.Printf("%-10s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
 				for i := 0; i < n; i++ {
-					fmt.Printf("%-5s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+					fmt.Printf("%-10s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
 				}
-
 			case 2:
 				s = inputString("Masukkan ID data yang ingin dilihat: ")
 				i = binarySearchID(A, n, s)
@@ -367,7 +364,7 @@ func viewProduct(A ProductArray, n int) {
 					fmt.Println("Barang tidak ditemukan")
 					return
 				} else {
-					fmt.Printf("%-5s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+					fmt.Printf("%-10s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
 				}
 			case 3:
 				viewProductDetail(A, n)
@@ -631,11 +628,26 @@ func totalSales(A ProductArray, n int) int {
 }
 
 func mostSoldProduct(A ProductArray, n int) {
+	var most int
+	for i := 0; i < n; i++ {
+		if A[i].Sold > most {
+			most = i
+		}
+	}
+
+	fmt.Printf("Barang paling laku: %s\n Total pembelian: %d", A[most].Name, A[most].Sold)
 
 }
 
 func leastSoldProduct(A ProductArray, n int) {
+	var least int
+	for i := 0; i < n; i++ {
+		if A[i].Sold > least {
+			least = i
+		}
+	}
 
+	fmt.Printf("Barang paling laku: %s\n Total pembelian: %d", A[least].Name, A[least].Sold)
 }
 
 // ======================================================
@@ -705,6 +717,7 @@ func generateID(A ProductArray) string {
 }
 
 func swap(A *Product, B *Product) {
+
 }
 
 func printTableHeader() {
