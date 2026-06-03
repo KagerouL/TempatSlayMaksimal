@@ -39,7 +39,7 @@ type Variant struct {
 }
 
 type Product struct {
-	ID       int
+	ID       string
 	Name     string
 	Category string
 	Price    int
@@ -56,31 +56,12 @@ type Product struct {
 	ReviewCount int
 }
 
-type Customer struct {
-	ID    int
-	Name  string
-	Phone string
-}
-
-type SalesItem struct {
-	ProductID   int
-	ProductName string
-	Price       int
-	Quantity    int
-	Subtotal    int
-}
-
-type Transaction struct {
-	TransactionID int
-	Buyer         Customer
-	Items         [MAX_ITEM]SalesItem
-	ItemCount     int
-	TotalPayment  int
-}
-
 type ProductList [NMAX]Product
-type TransactionList [NMAX]Transaction
 type ProductArray [NMAX]Product
+
+var productsArr ProductArray
+var countData int
+var historyCountData int
 
 // ======================================================
 // UTILITY
@@ -125,6 +106,12 @@ func logo() {
 `, pink)
 	fmt.Println(logo)
 }
+func title(text string) {
+	line(40)
+	printCenter("Anda Berada Di ", 40)
+	printCenter(text, 40)
+	line(40)
+}
 
 func line(n int) {
 	var i int
@@ -134,11 +121,23 @@ func line(n int) {
 	fmt.Println()
 }
 
-func inputInt(text string) int {
-	var x int
-	fmt.Print(text)
-	fmt.Scan(&x)
-	return x
+func inputInt(prompt string) int {
+	var value int
+	for {
+		fmt.Print(prompt)
+		_, err := fmt.Scan(&value)
+		if err != nil {
+			warningMessage("Input harus berupa angka!")
+			var dummy string
+			fmt.Scanln(&dummy)
+			continue
+		}
+		if value < 0 {
+			warningMessage("Input tidak boleh negatif!")
+			continue
+		}
+		return value
+	}
 }
 
 func inputString(text string) string {
@@ -170,7 +169,7 @@ func showMenu(title string, menus [5]string, total int) {
 		fmt.Printf("%d. %s\n", i+1, menus[i])
 	}
 
-	fmt.Println("0. Exit")
+	fmt.Println("0. Kembali")
 	line(40)
 }
 
@@ -183,17 +182,15 @@ func crudMenu() {
 	menus[1] = "Perbarui Produk"
 	menus[2] = "Hapus Produk"
 	menus[3] = "Lihat Produk"
-	menus[4] = "Kembali"
 
 	for {
-		showMenu("CRUD MENU", menus, 5)
+		showMenu("CRUD MENU", menus, 4)
 
 		c = inputInt("Pilih menu: ")
 
 		switch c {
 		case 1:
-			fmt.Println("CREATE")
-
+			createProduct(&productsArr)
 		case 2:
 			fmt.Println("UPDATE")
 
@@ -210,7 +207,7 @@ func crudMenu() {
 			return
 
 		default:
-			fmt.Println("Menu ini tidak tersedia")
+			warningMessage("Menu ini tidak tersedia")
 		}
 	}
 }
@@ -234,8 +231,7 @@ func mainMenu() {
 			crudMenu()
 
 		case 2:
-			fmt.Println("LIHAT PRODUCT")
-
+			viewProduct(productsArr, countData)
 		case 3:
 			fmt.Println("RECOMMENDATION")
 
@@ -276,18 +272,75 @@ func statisticMenu(A *ProductArray, n *int) {
 // CRUD
 // ======================================================
 
-func createProduct(A *ProductArray, n *int) {
+func createProduct(data *ProductArray) {
+	title("TAMBAH PRODUK")
+	var i, variantCount int
 
+	logo()
+	title("TAMBAH PRODUK")
+
+	if countData >= NMAX {
+		fmt.Println("Data produk penuh!")
+		return
+	}
+
+	data[countData].ID = generateID(*data)
+
+	data[countData].Name = inputString("Nama Produk        : ")
+	data[countData].Category = inputString("Kategori           : ")
+	data[countData].Price = inputInt("Harga              : ")
+
+	data[countData].BrandInfo.Name = inputString("Nama Brand         : ")
+	data[countData].BrandInfo.Country = inputString("Negara datasal Brand  : ")
+
+	data[countData].DetailInfo.Description = inputString("Deskripsi Produk   : ")
+	data[countData].DetailInfo.SkinType = inputString("Jenis Kulit        : ")
+	data[countData].DetailInfo.ExpiredYear = inputInt("Tahun Kedaluwarsa  : ")
+
+	variantCount = inputInt("Jumlah Varian (1-5): ")
+	for variantCount < 1 || variantCount > MAX_VARIANT {
+		warningMessage("Jumlah varian harus (1-5)!")
+		variantCount = inputInt("Jumlah Varian (1-5): ")
+	}
+	data[countData].VariantCount = variantCount
+
+	if data[countData].VariantCount < 1 {
+		data[countData].VariantCount = 1
+	}
+
+	if data[countData].VariantCount > MAX_VARIANT {
+		data[countData].VariantCount = MAX_VARIANT
+	}
+
+	for i = 0; i < data[countData].VariantCount; i++ {
+		fmt.Println()
+		fmt.Println("Varian", i+1)
+
+		data[countData].Variants[i].Color = inputString("Warna  : ")
+		data[countData].Variants[i].Size = inputString("Ukuran : ")
+		data[countData].Variants[i].Stock = inputInt("Stok   : ")
+	}
+
+	data[countData].Sold = 0
+	data[countData].RateInfo.Score = 0
+	data[countData].RateInfo.TotalReview = 0
+	data[countData].ReviewCount = 0
+
+	countData++
+
+	fmt.Println()
+	logo()
+	successMessage("Produk berhasil ditambahkan!")
 }
 
 func viewProduct(A ProductArray, n int) {
 	var menus [5]string
-	var c, s, i int
+	var c, i int
+	var s string
 
 	menus[0] = "Semua Data"
 	menus[1] = "Data Spesifik"
 	menus[2] = "Data Detail"
-	menus[3] = "Kembali"
 
 	for {
 		showMenu("View Menu", menus, 3)
@@ -298,34 +351,33 @@ func viewProduct(A ProductArray, n int) {
 			c = inputInt("Pilih menu: ")
 
 			switch c {
-				case 1:
-					fmt.Printf("%-5s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
-					for i := 0; i < n; i++ {
-						fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
-					}
+			case 1:
+				fmt.Printf("%-10s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
+				for i := 0; i < n; i++ {
+					fmt.Printf("%-10s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+				}
+			case 2:
+				s = inputString("Masukkan ID data yang ingin dilihat: ")
+				i = binarySearchID(A, n, s)
 
-				case 2:
-					s = inputInt("Masukkan ID data yang ingin dilihat: ")
-					i = binarySearchID(A, n, s)
-
-					if i == -1 {
-						fmt.Println("Barang tidak ditemukan")
-						return
-					} else {
-						fmt.Printf("%-5d | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
-					}
-				case 3:
-					viewProductDetail(A, n)
-				case 4:
+				if i == -1 {
+					fmt.Println("Barang tidak ditemukan")
 					return
-				default:
-					fmt.Println("Menu tidak ditemukan")
+				} else {
+					fmt.Printf("%-10s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+				}
+			case 3:
+				viewProductDetail(A, n)
+			case 4:
+				return
+			case 0:
+				return
+			default:
+				fmt.Println("Menu tidak ditemukan")
 			}
-
 
 		}
 	}
-
 
 }
 
@@ -354,10 +406,18 @@ func isFull(n int) bool {
 }
 
 func validatePrice(price int) bool {
+	if price > 0 {
+		return true
+	}
+
 	return false
 }
 
 func validateStock(stock int) bool {
+	if stock >= 0 {
+		return true
+	}
+
 	return false
 }
 
@@ -367,15 +427,27 @@ func validateStock(stock int) bool {
 
 // Sequential Search
 func sequentialSearchName(A ProductArray, n int, name string) int {
+	for i := 0; i < n; i++ {
+		if A[i].Name == name {
+			return i
+		}
+	}
+
 	return -1
 }
 
 func sequentialSearchCategory(A ProductArray, n int, category string) int {
+	for i := 0; i < n; i++ {
+		if A[i].Category == category {
+			return i
+		}
+	}
+
 	return -1
 }
 
 // Binary Search
-func binarySearchID(A ProductArray, n int, id int) int {
+func binarySearchID(A ProductArray, n int, id string) int {
 	var left, right, mid int
 
 	left = 0
@@ -423,20 +495,84 @@ func binarySearchPrice(A ProductArray, n int, price int) int {
 
 // Insertion Sort
 func insertionSortPriceAsc(A *ProductArray, n int) {
+	var i, j int
+	var temp Product
 
+	i = 0
+
+	for i <= n-1 {
+		j = i
+		temp = A[j]
+
+		for j > 0 && temp.Price < A[j-1].Price {
+			A[j] = A[j-1]
+			j = j - 1
+		}
+		A[j] = temp
+		i = i + 1
+	}
 }
 
 func insertionSortPriceDesc(A *ProductArray, n int) {
+	var i, j int
+	var temp Product
 
+	i = 0
+
+	for i <= n-1 {
+		j = i
+		temp = A[j]
+
+		for j > 0 && temp.Price > A[j-1].Price {
+			A[j] = A[j-1]
+			j = j - 1
+		}
+		A[j] = temp
+		i = i + 1
+	}
 }
 
 // Selection Sort
 func selectionSortNameAsc(A *ProductArray, n int) {
+	var idxMin, j, i int
+	var temp Product
 
+	for i <= n {
+		idxMin = i
+		j = i
+
+		for j > n {
+			if A[idxMin].Name > A[j].Name {
+				idxMin = j
+			}
+			j++
+		}
+		temp = A[idxMin]
+		A[idxMin] = A[i]
+		A[i] = temp
+		i++
+	}
 }
 
 func selectionSortNameDesc(A *ProductArray, n int) {
+	var idxMax, j, i int
+	var temp Product
 
+	for i <= n {
+		idxMax = n
+		j = i
+
+		for j < n {
+			if A[idxMax].Name < A[j].Name {
+				idxMax = j
+			}
+			j++
+		}
+		temp = A[idxMax]
+		A[idxMax] = A[i]
+		A[i] = temp
+		i++
+	}
 }
 
 // ======================================================
@@ -492,18 +628,72 @@ func totalSales(A ProductArray, n int) int {
 }
 
 func mostSoldProduct(A ProductArray, n int) {
+	var most int
+	for i := 0; i < n; i++ {
+		if A[i].Sold > most {
+			most = i
+		}
+	}
+
+	fmt.Printf("Barang paling laku: %s\n Total pembelian: %d", A[most].Name, A[most].Sold)
 
 }
 
 func leastSoldProduct(A ProductArray, n int) {
+	var least int
+	for i := 0; i < n; i++ {
+		if A[i].Sold > least {
+			least = i
+		}
+	}
 
+	fmt.Printf("Barang paling laku: %s\n Total pembelian: %d", A[least].Name, A[least].Sold)
 }
 
 // ======================================================
 // HELPER
 // ======================================================
 
-func findIndexByID(A ProductArray, n int, id int) int {
+func printCenter(text string, width int) {
+	var left, right int
+	left = (width - len(text)) / 2
+	right = width - len(text) - left
+	fmt.Print("|")
+	for i := 0; i < left; i++ {
+		fmt.Print(" ")
+	}
+	fmt.Print(text)
+	for i := 0; i < right; i++ {
+		fmt.Print(" ")
+	}
+	fmt.Println("|")
+}
+
+func errorMessage(message string) {
+	line(40)
+	printCenter("ERROR >_<", 38)
+	printCenter(message, 38)
+	line(40)
+	fmt.Println()
+}
+
+func successMessage(message string) {
+	line(40)
+	printCenter("SUCCESS <3", 38)
+	printCenter(message, 38)
+	line(40)
+	fmt.Println()
+}
+
+func warningMessage(message string) {
+	line(40)
+	printCenter("WARNING -_-", 38)
+	printCenter(message, 38)
+	line(40)
+	fmt.Println()
+}
+
+func findIndexByID(A ProductArray, n int, id string) int {
 	var mid, left, right, isFound int
 	left = 0
 	right = n
@@ -522,8 +712,8 @@ func findIndexByID(A ProductArray, n int, id int) int {
 	return -1
 }
 
-func generateID(A ProductArray, n int) int {
-	return 0
+func generateID(A ProductArray) string {
+	return "TSM" + fmt.Sprintf("%03d", historyCountData+1)
 }
 
 func swap(A *Product, B *Product) {
