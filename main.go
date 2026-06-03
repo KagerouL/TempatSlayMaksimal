@@ -198,7 +198,7 @@ func crudMenu() {
 			fmt.Println("DELETE")
 
 		case 4:
-			fmt.Println("VIEW")
+			viewProduct(productsArr, countData)
 
 		case 5:
 			clearScreen()
@@ -335,12 +335,10 @@ func createProduct(data *ProductArray) {
 
 func viewProduct(A ProductArray, n int) {
 	var menus [5]string
-	var c, i int
-	var s string
+	var c int
 
 	menus[0] = "Semua Data"
 	menus[1] = "Data Spesifik"
-	menus[2] = "Data Detail"
 
 	for {
 		showMenu("View Menu", menus, 3)
@@ -352,24 +350,9 @@ func viewProduct(A ProductArray, n int) {
 
 			switch c {
 			case 1:
-				fmt.Printf("%-10s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
-				for i := 0; i < n; i++ {
-					fmt.Printf("%-10s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
-				}
+				viewProductDetail(A, c)
 			case 2:
-				s = inputString("Masukkan ID data yang ingin dilihat: ")
-				i = binarySearchID(A, n, s)
-
-				if i == -1 {
-					fmt.Println("Barang tidak ditemukan")
-					return
-				} else {
-					fmt.Printf("%-10s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
-				}
-			case 3:
-				viewProductDetail(A, n)
-			case 4:
-				return
+				viewProductDetail(A, c)
 			case 0:
 				return
 			default:
@@ -381,8 +364,26 @@ func viewProduct(A ProductArray, n int) {
 
 }
 
-func viewProductDetail(A ProductArray, n int) {
-	
+func viewProductDetail(A ProductArray, c int) {
+	var i int
+	var s string
+
+	if c == 1 {
+		fmt.Printf("%-10s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
+			for i := 0; i < countData; i++ {
+				fmt.Printf("%-10s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+			}
+	} else if c == 2 {
+		s = inputString("Masukkan ID data yang ingin dilihat: ")
+		i = binarySearchID(A, countData, s)
+
+		if i == -1 {
+			fmt.Println("Barang tidak ditemukan")
+			return
+		} else {
+			fmt.Printf("%-10s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)		
+		}
+	}
 }
 
 func updateProduct(A *ProductArray, n int) {
