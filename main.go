@@ -108,7 +108,8 @@ func logo() {
 }
 func title(text string) {
 	line(40)
-	fmt.Printf("|%26s%-12s|\n", text, "")
+	printCenter("Anda Berada Di ", 40)
+	printCenter(text, 40)
 	line(40)
 }
 
@@ -122,13 +123,13 @@ func line(n int) {
 
 func inputInt(prompt string) int {
 	var value int
-	var err error
-
 	for {
 		fmt.Print(prompt)
-		_, err = fmt.Scan(&value)
+		_, err := fmt.Scan(&value)
 		if err != nil {
 			warningMessage("Input harus berupa angka!")
+			var dummy string
+			fmt.Scanln(&dummy)
 			continue
 		}
 		if value < 0 {
@@ -181,18 +182,15 @@ func crudMenu() {
 	menus[1] = "Perbarui Produk"
 	menus[2] = "Hapus Produk"
 	menus[3] = "Lihat Produk"
-	menus[4] = "Kembali"
 
 	for {
-		showMenu("CRUD MENU", menus, 5)
+		showMenu("CRUD MENU", menus, 4)
 
 		c = inputInt("Pilih menu: ")
 
 		switch c {
 		case 1:
-			fmt.Println("CREATE")
 			createProduct(&productsArr)
-
 		case 2:
 			fmt.Println("UPDATE")
 
@@ -209,7 +207,7 @@ func crudMenu() {
 			return
 
 		default:
-			fmt.Println("Menu ini tidak tersedia")
+			warningMessage("Menu ini tidak tersedia")
 		}
 	}
 }
@@ -275,6 +273,7 @@ func statisticMenu(A *ProductArray, n *int) {
 // ======================================================
 
 func createProduct(data *ProductArray) {
+	title("TAMBAH PRODUK")
 	var i, variantCount int
 
 	logo()
@@ -300,7 +299,7 @@ func createProduct(data *ProductArray) {
 
 	variantCount = inputInt("Jumlah Varian (1-5): ")
 	for variantCount < 1 || variantCount > MAX_VARIANT {
-		warningMessage("Jumlah varian tidak boleh kurang dari 1!")
+		warningMessage("Jumlah varian harus (1-5)!")
 		variantCount = inputInt("Jumlah Varian (1-5): ")
 	}
 	data[countData].VariantCount = variantCount
@@ -330,7 +329,8 @@ func createProduct(data *ProductArray) {
 	countData++
 
 	fmt.Println()
-	fmt.Println("Produk berhasil ditambahkan!")
+	logo()
+	successMessage("Produk berhasil ditambahkan!")
 }
 
 func viewProduct(A ProductArray, n int) {
@@ -654,22 +654,43 @@ func leastSoldProduct(A ProductArray, n int) {
 // HELPER
 // ======================================================
 
+func printCenter(text string, width int) {
+	var left, right int
+	left = (width - len(text)) / 2
+	right = width - len(text) - left
+	fmt.Print("|")
+	for i := 0; i < left; i++ {
+		fmt.Print(" ")
+	}
+	fmt.Print(text)
+	for i := 0; i < right; i++ {
+		fmt.Print(" ")
+	}
+	fmt.Println("|")
+}
+
 func errorMessage(message string) {
-	title("ERROR >_<")
-	fmt.Println(message)
 	line(40)
+	printCenter("ERROR >_<", 38)
+	printCenter(message, 38)
+	line(40)
+	fmt.Println()
 }
 
 func successMessage(message string) {
-	title("SUCCESS <3")
-	fmt.Println(message)
 	line(40)
+	printCenter("SUCCESS <3", 38)
+	printCenter(message, 38)
+	line(40)
+	fmt.Println()
 }
 
 func warningMessage(message string) {
-	title("WARNING -_-")
-	fmt.Println(message)
 	line(40)
+	printCenter("WARNING -_-", 38)
+	printCenter(message, 38)
+	line(40)
+	fmt.Println()
 }
 
 func findIndexByID(A ProductArray, n int, id string) int {
