@@ -341,7 +341,7 @@ func viewProduct(A ProductArray, n int) {
 	menus[1] = "Data Spesifik"
 
 	for {
-		showMenu("View Menu", menus, 3)
+		showMenu("View Menu", menus, 2)
 		if len(A) == 0 {
 			fmt.Println("Belum ada data")
 			return
