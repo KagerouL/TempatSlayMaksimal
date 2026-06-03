@@ -369,9 +369,9 @@ func viewProductDetail(A ProductArray, c int) {
 	var s string
 
 	if c == 1 {
-		fmt.Printf("%-10s | %-20s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
+		fmt.Printf("%-10s | %-50s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
 			for i := 0; i < countData; i++ {
-				fmt.Printf("%-10s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+				fmt.Printf("%-10s | %-50s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
 			}
 	} else if c == 2 {
 		s = inputString("Masukkan ID data yang ingin dilihat: ")
@@ -381,7 +381,7 @@ func viewProductDetail(A ProductArray, c int) {
 			fmt.Println("Barang tidak ditemukan")
 			return
 		} else {
-			fmt.Printf("%-10s | %-20s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)		
+			fmt.Printf("%-10s | %-50s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)		
 		}
 	}
 }
