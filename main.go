@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	NMAX        int = 999
+	NMAX        int = 100
 	MAX_VARIANT int = 5
 	MAX_REVIEW  int = 10
 	MAX_ITEM    int = 10
@@ -175,7 +175,6 @@ func showMenu(titleParam string, menus [5]string, total int) {
 }
 
 func crudMenu() {
-	clearScreen()
 	var menus [5]string
 	var c int
 
@@ -267,13 +266,12 @@ func statisticMenu(A *ProductArray, n *int) {
 func createProduct(data *ProductArray) {
 	var i, variantCount int
 
-	if countData >= NMAX {
-		fmt.Println("Data produk penuh!")
+	if isFull(countData) {
+		fmt.Println("Data produk penuh!!!")
 		return
 	}
 
 	data[countData].ID = generateID(*data)
-
 	data[countData].Name = inputString("Nama Produk        : ")
 	data[countData].Category = inputString("Kategori           : ")
 	data[countData].Price = inputInt("Harga              : ")
@@ -291,7 +289,6 @@ func createProduct(data *ProductArray) {
 		variantCount = inputInt("Jumlah Varian (1-5): ")
 	}
 	data[countData].VariantCount = variantCount
-
 	if data[countData].VariantCount < 1 {
 		data[countData].VariantCount = 1
 	}
@@ -384,22 +381,24 @@ func viewProductDetail(A ProductArray, c int) {
 func updateProduct(A *ProductArray) {
 	var idx int
 	var id string
-
+	if countData == 0 {
+		warningMessage("Tidak bisa update karena belum ada data!!!")
+		crudMenu()
+	}
 	title("MENU UPDATE")
+	fmt.Println("Masukan batal jika ingin kembali")
 	id = inputString("Masukan ID yang ingin diupdate: ")
+	fmt.Println(findIndexByID(productsArr, id))
 	if id == "batal" {
 		crudMenu()
 	}
-	if countData == 0 {
-		warningMessage("Tidak ada data")
-		crudMenu()
-	} else {
-		for findIndexByID(productsArr, id) == -1 {
-			warningMessage("ID yang anda masukan tidak ada!!!")
-			id = inputString("Masukan ID yang ingin diupdate: ")
-			if id == "batal" {
-				crudMenu()
-			}
+
+	for findIndexByID(productsArr, id) == -1 {
+		warningMessage("ID yang anda masukan tidak ada!!!")
+		fmt.Println("Masukan batal jika ingin kembali")
+		id = inputString("Masukan ID yang ingin diupdate: ")
+		if id == "batal" {
+			crudMenu()
 		}
 	}
 	idx = findIndexByID(productsArr, id)
@@ -457,7 +456,7 @@ func isEmpty(n int) bool {
 }
 
 func isFull(n int) bool {
-	return false
+	return n > NMAX
 }
 
 func validatePrice(price int) bool {
@@ -722,43 +721,41 @@ func printCenter(text string, width int) {
 }
 
 func errorMessage(message string) {
-	line(40)
-	printCenter("ERROR >_<", 38)
-	printCenter(message, 38)
-	line(40)
+	line(52)
+	printCenter("ERROR >_<", 50)
+	printCenter(message, 50)
+	line(52)
 	fmt.Println()
 }
 
 func successMessage(message string) {
-	line(40)
-	printCenter("SUCCESS <3", 38)
-	printCenter(message, 38)
-	line(40)
+	line(52)
+	printCenter("SUCCESS <3", 50)
+	printCenter(message, 50)
+	line(52)
 	fmt.Println()
 }
 
 func warningMessage(message string) {
-	line(40)
-	printCenter("WARNING -_-", 38)
-	printCenter(message, 38)
-	line(40)
+	line(52)
+	printCenter("WARNING -_-", 50)
+	printCenter(message, 50)
+	line(52)
 	fmt.Println()
 }
 
 func findIndexByID(A ProductArray, id string) int {
-	var mid, left, right, isFound int
-	left = 0
-	right = countData
-	isFound = -1
-	for left < right && isFound == -1 {
-		mid = (left + right) / 2
+	left := 0
+	right := countData - 1
+	for left <= right {
+		mid := (left + right) / 2
 		if id == A[mid].ID {
-			isFound = mid
+			return mid
 		}
 		if id > A[mid].ID {
-			right = mid - 1
-		} else if id < A[mid].ID {
 			left = mid + 1
+		} else {
+			right = mid - 1
 		}
 	}
 	return -1
@@ -785,10 +782,6 @@ func next() {
 	fmt.Scanln()
 	fmt.Scanln()
 }
-
-// ======================================================
-// MAIN
-// ======================================================
 
 func main() {
 	logo()
