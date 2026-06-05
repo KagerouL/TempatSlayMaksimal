@@ -320,6 +320,7 @@ func createProduct(data *ProductArray) {
 	fmt.Println()
 
 	successMessage("Produk berhasil ditambahkan!")
+	next()
 }
 
 func viewProduct(A ProductArray, n int) {
@@ -348,8 +349,8 @@ func viewProduct(A ProductArray, n int) {
 			default:
 				fmt.Println("Menu tidak ditemukan")
 			}
-
 		}
+		next()
 	}
 
 }
@@ -359,10 +360,12 @@ func viewProductDetail(A ProductArray, c int) {
 	var s string
 
 	if c == 1 {
-		fmt.Printf("%-10s | %-50s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
+		printTableHeader()
+		line(124)
 		for i := 0; i < countData; i++ {
-			fmt.Printf("%-10s | %-50s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+			printProduct(A, i)
 		}
+		line(124)
 	} else if c == 2 {
 		s = inputString("Masukkan ID data yang ingin dilihat: ")
 		i = binarySearchID(A, countData, s)
@@ -371,7 +374,9 @@ func viewProductDetail(A ProductArray, c int) {
 			fmt.Println("Barang tidak ditemukan")
 			return
 		} else {
-			fmt.Printf("%-10s | %-50s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+			line(124)
+			printProduct(A, i)
+			line(124)
 		}
 	}
 }
@@ -760,7 +765,7 @@ func findIndexByID(A ProductArray, id string) int {
 }
 
 func generateID(A ProductArray) string {
-	return "TSM" + fmt.Sprintf("%03d", historyCountData+1)
+	return "TSM" + fmt.Sprintf("%03d", countData+1)
 }
 
 func swap(A *Product, B *Product) {
@@ -768,11 +773,17 @@ func swap(A *Product, B *Product) {
 }
 
 func printTableHeader() {
-
+	fmt.Printf("%-10s | %-50s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
 }
 
-func printProduct(B Product) {
+func printProduct(A ProductArray, i int) {
+	fmt.Printf("%-10s | %-50s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+}
 
+func next() {
+	fmt.Println("Tekan Enter untuk lanjut!!")
+	fmt.Scanln()
+	fmt.Scanln()
 }
 
 // ======================================================
