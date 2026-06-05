@@ -739,19 +739,17 @@ func warningMessage(message string) {
 }
 
 func findIndexByID(A ProductArray, id string) int {
-	var mid, left, right, isFound int
-	left = 0
-	right = countData
-	isFound = -1
-	for left < right && isFound == -1 {
-		mid = (left + right) / 2
+	left := 0
+	right := countData - 1
+	for left <= right {
+		mid := (left + right) / 2
 		if id == A[mid].ID {
-			isFound = mid
+			return mid
 		}
 		if id > A[mid].ID {
-			right = mid - 1
-		} else if id < A[mid].ID {
 			left = mid + 1
+		} else {
+			right = mid - 1
 		}
 	}
 	return -1
