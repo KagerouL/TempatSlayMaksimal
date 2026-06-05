@@ -801,7 +801,7 @@ func printProductDetail(A ProductArray, n int) {
 	line(45)
 	for i := 0; i < v; i++ {
 		fmt.Printf("Varian %d\n", i+1)
-		fmt.Printf("%-20s: %s \n%-20s: %s \n%-20s: %d", "Warna", A[i].Variants[i].Color, "Ukuran", A[i].Variants[i].Size, "Stok", A[i].Variants[i].Stock)
+		fmt.Printf("%-20s: %s \n%-20s: %s \n%-20s: %d\n", "Warna", A[i].Variants[i].Color, "Ukuran", A[i].Variants[i].Size, "Stok", A[i].Variants[i].Stock)
 	}
 }
 
