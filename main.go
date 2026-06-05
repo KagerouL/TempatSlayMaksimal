@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	NMAX        int = 999
+	NMAX        int = 100
 	MAX_VARIANT int = 5
 	MAX_REVIEW  int = 10
 	MAX_ITEM    int = 10
@@ -267,13 +267,12 @@ func statisticMenu(A *ProductArray, n *int) {
 func createProduct(data *ProductArray) {
 	var i, variantCount int
 
-	if countData >= NMAX {
-		fmt.Println("Data produk penuh!")
+	if isFull(countData) {
+		fmt.Println("Data produk penuh!!!")
 		return
 	}
 
 	data[countData].ID = generateID(*data)
-
 	data[countData].Name = inputString("Nama Produk        : ")
 	data[countData].Category = inputString("Kategori           : ")
 	data[countData].Price = inputInt("Harga              : ")
@@ -291,7 +290,6 @@ func createProduct(data *ProductArray) {
 		variantCount = inputInt("Jumlah Varian (1-5): ")
 	}
 	data[countData].VariantCount = variantCount
-
 	if data[countData].VariantCount < 1 {
 		data[countData].VariantCount = 1
 	}
@@ -348,7 +346,6 @@ func viewProduct(A ProductArray, n int) {
 			default:
 				fmt.Println("Menu tidak ditemukan")
 			}
-
 		}
 	}
 
@@ -381,16 +378,18 @@ func updateProduct(A *ProductArray) {
 	var id string
 
 	title("MENU UPDATE")
+	fmt.Println("Masukan batal jika ingin kembali")
 	id = inputString("Masukan ID yang ingin diupdate: ")
 	if id == "batal" {
 		crudMenu()
 	}
 	if countData == 0 {
-		warningMessage("Tidak ada data")
+		warningMessage("Belum ada data!!!")
 		crudMenu()
 	} else {
 		for findIndexByID(productsArr, id) == -1 {
 			warningMessage("ID yang anda masukan tidak ada!!!")
+			fmt.Println("Masukan batal jika ingin kembali")
 			id = inputString("Masukan ID yang ingin diupdate: ")
 			if id == "batal" {
 				crudMenu()
@@ -452,7 +451,7 @@ func isEmpty(n int) bool {
 }
 
 func isFull(n int) bool {
-	return false
+	return n <= NMAX
 }
 
 func validatePrice(price int) bool {
@@ -774,10 +773,6 @@ func printTableHeader() {
 func printProduct(B Product) {
 
 }
-
-// ======================================================
-// MAIN
-// ======================================================
 
 func main() {
 	logo()
