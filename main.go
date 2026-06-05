@@ -1,7 +1,9 @@
 package main
 
 //https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type+Something+&x=none&v=4&h=4&w=80&we=false
-import "fmt"
+import (
+	"fmt"
+)
 
 const (
 	NMAX        int = 999
@@ -159,22 +161,21 @@ func pause() {
 // MENU
 // ======================================================
 
-func showMenu(title string, menus [5]string, total int) {
+func showMenu(titleParam string, menus [5]string, total int) {
 	var i int
-
-	fmt.Println(title)
-	line(40)
+	title(titleParam)
+	line(52)
 
 	for i = 0; i < total; i++ {
 		fmt.Printf("%d. %s\n", i+1, menus[i])
 	}
 
 	fmt.Println("0. Kembali")
-	line(40)
+	line(52)
 }
 
 func crudMenu() {
-	logo()
+	clearScreen()
 	var menus [5]string
 	var c int
 
@@ -187,25 +188,19 @@ func crudMenu() {
 		showMenu("CRUD MENU", menus, 4)
 
 		c = inputInt("Pilih menu: ")
-
 		switch c {
 		case 1:
 			createProduct(&productsArr)
 		case 2:
-			fmt.Println("UPDATE")
-
+			updateProduct(&productsArr)
 		case 3:
 			deleteProduct(&productsArr)
-
 		case 4:
 			viewProduct(productsArr, countData)
-
 		case 5:
 			clearScreen()
-
 		case 0:
 			return
-
 		default:
 			warningMessage("Menu ini tidak tersedia")
 		}
@@ -223,13 +218,10 @@ func mainMenu() {
 
 	for {
 		showMenu("MAIN MENU", menus, 4)
-
 		c = inputInt("Pilih menu: ")
-
 		switch c {
 		case 1:
 			crudMenu()
-
 		case 2:
 			viewProduct(productsArr, countData)
 		case 3:
@@ -273,11 +265,7 @@ func statisticMenu(A *ProductArray, n *int) {
 // ======================================================
 
 func createProduct(data *ProductArray) {
-	title("TAMBAH PRODUK")
 	var i, variantCount int
-
-	logo()
-	title("TAMBAH PRODUK")
 
 	if countData >= NMAX {
 		fmt.Println("Data produk penuh!")
@@ -330,11 +318,12 @@ func createProduct(data *ProductArray) {
 	historyCountData++
 
 	fmt.Println()
-	logo()
+
 	successMessage("Produk berhasil ditambahkan!")
 }
 
 func viewProduct(A ProductArray, n int) {
+	clearScreen()
 	var menus [5]string
 	var c int
 
@@ -371,9 +360,9 @@ func viewProductDetail(A ProductArray, c int) {
 
 	if c == 1 {
 		fmt.Printf("%-10s | %-50s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
-			for i := 0; i < countData; i++ {
-				fmt.Printf("%-10s | %-50s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
-			}
+		for i := 0; i < countData; i++ {
+			fmt.Printf("%-10s | %-50s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+		}
 	} else if c == 2 {
 		s = inputString("Masukkan ID data yang ingin dilihat: ")
 		i = binarySearchID(A, countData, s)
@@ -382,20 +371,17 @@ func viewProductDetail(A ProductArray, c int) {
 			fmt.Println("Barang tidak ditemukan")
 			return
 		} else {
-			fmt.Printf("%-10s | %-50s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)		
+			fmt.Printf("%-10s | %-50s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
 		}
 	}
 }
 
-func updateProduct(A *ProductArray, n int) {
-
-}
-
-func deleteProduct(A *ProductArray) {
+func updateProduct(A *ProductArray) {
+	var idx int
 	var id string
-	var i int
-	title("MENU HAPUS")
-	id = inputString("Masukan ID yang ingin dihapus: ")
+
+	title("MENU UPDATE")
+	id = inputString("Masukan ID yang ingin diupdate: ")
 	if id == "batal" {
 		crudMenu()
 	}
@@ -405,22 +391,57 @@ func deleteProduct(A *ProductArray) {
 	} else {
 		for findIndexByID(productsArr, id) == -1 {
 			warningMessage("ID yang anda masukan tidak ada!!!")
-			id = inputString("Masukan ID yang ingin dihapus: ")
+			id = inputString("Masukan ID yang ingin diupdate: ")
 			if id == "batal" {
 				crudMenu()
 			}
 		}
 	}
+	idx = findIndexByID(productsArr, id)
 
-	if id == A[countData].ID {
-		countData--
-	} else {
-		i = findIndexByID(productsArr, id)
-		for i < countData {
-			(*A)[i] = A[i+1]
-		}
-		countData--
+	A[idx].Name = inputString("Nama Produk        : ")
+	A[idx].Category = inputString("Kategori           : ")
+	A[idx].Price = inputInt("Harga              : ")
+
+	A[idx].BrandInfo.Name = inputString("Nama Brand         : ")
+	A[idx].BrandInfo.Country = inputString("Negara datasal Brand  : ")
+
+	A[idx].DetailInfo.Description = inputString("Deskripsi Produk   : ")
+	A[idx].DetailInfo.SkinType = inputString("Jenis Kulit        : ")
+	A[idx].DetailInfo.ExpiredYear = inputInt("Tahun Kedaluwarsa  : ")
+
+	fmt.Println()
+	successMessage("Produk berhasil diperbarui!")
+}
+
+func deleteProduct(A *ProductArray) {
+	var (
+		id  string
+		idx int
+	)
+	title("MENU HAPUS")
+	if countData == 0 {
+		warningMessage("Tidak ada data")
+		crudMenu()
+		return
 	}
+	for {
+		id = inputString("Masukan ID yang ingin dihapus: ")
+		if id == "batal" {
+			crudMenu()
+			return
+		}
+		idx = findIndexByID(*A, id)
+		if idx != -1 {
+			break
+		}
+		warningMessage("ID yang anda masukan tidak ada!!!")
+	}
+	for i := idx; i < countData-1; i++ {
+		(*A)[i] = (*A)[i+1]
+	}
+	countData--
+	successMessage("Produk berhasil dihapus")
 }
 
 // ======================================================
@@ -479,10 +500,8 @@ func sequentialSearchCategory(A ProductArray, n int, category string) int {
 // Binary Search
 func binarySearchID(A ProductArray, n int, id string) int {
 	var left, right, mid int
-
 	left = 0
 	right = n
-
 	for left <= right {
 		mid = (left + right) / 2
 
@@ -494,7 +513,6 @@ func binarySearchID(A ProductArray, n int, id string) int {
 			right = mid - 1
 		}
 	}
-
 	return -1
 }
 
