@@ -398,7 +398,6 @@ func updateProduct(A *ProductArray) {
 		}
 	}
 	idx = findIndexByID(productsArr, id)
-
 	A[idx].Name = inputString("Nama Produk        : ")
 	A[idx].Category = inputString("Kategori           : ")
 	A[idx].Price = inputInt("Harga              : ")
