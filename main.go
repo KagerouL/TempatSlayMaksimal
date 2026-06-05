@@ -175,7 +175,6 @@ func showMenu(titleParam string, menus [5]string, total int) {
 }
 
 func crudMenu() {
-	clearScreen()
 	var menus [5]string
 	var c int
 
@@ -376,24 +375,24 @@ func viewProductDetail(A ProductArray, c int) {
 func updateProduct(A *ProductArray) {
 	var idx int
 	var id string
-
+	if countData == 0 {
+		warningMessage("Tidak bisa update karena belum ada data!!!")
+		crudMenu()
+	}
 	title("MENU UPDATE")
 	fmt.Println("Masukan batal jika ingin kembali")
 	id = inputString("Masukan ID yang ingin diupdate: ")
+	fmt.Println(findIndexByID(productsArr, id))
 	if id == "batal" {
 		crudMenu()
 	}
-	if countData == 0 {
-		warningMessage("Belum ada data!!!")
-		crudMenu()
-	} else {
-		for findIndexByID(productsArr, id) == -1 {
-			warningMessage("ID yang anda masukan tidak ada!!!")
-			fmt.Println("Masukan batal jika ingin kembali")
-			id = inputString("Masukan ID yang ingin diupdate: ")
-			if id == "batal" {
-				crudMenu()
-			}
+
+	for findIndexByID(productsArr, id) == -1 {
+		warningMessage("ID yang anda masukan tidak ada!!!")
+		fmt.Println("Masukan batal jika ingin kembali")
+		id = inputString("Masukan ID yang ingin diupdate: ")
+		if id == "batal" {
+			crudMenu()
 		}
 	}
 	idx = findIndexByID(productsArr, id)
@@ -451,7 +450,7 @@ func isEmpty(n int) bool {
 }
 
 func isFull(n int) bool {
-	return n <= NMAX
+	return n > NMAX
 }
 
 func validatePrice(price int) bool {
@@ -716,26 +715,26 @@ func printCenter(text string, width int) {
 }
 
 func errorMessage(message string) {
-	line(40)
-	printCenter("ERROR >_<", 38)
-	printCenter(message, 38)
-	line(40)
+	line(52)
+	printCenter("ERROR >_<", 50)
+	printCenter(message, 50)
+	line(52)
 	fmt.Println()
 }
 
 func successMessage(message string) {
-	line(40)
-	printCenter("SUCCESS <3", 38)
-	printCenter(message, 38)
-	line(40)
+	line(52)
+	printCenter("SUCCESS <3", 50)
+	printCenter(message, 50)
+	line(52)
 	fmt.Println()
 }
 
 func warningMessage(message string) {
-	line(40)
-	printCenter("WARNING -_-", 38)
-	printCenter(message, 38)
-	line(40)
+	line(52)
+	printCenter("WARNING -_-", 50)
+	printCenter(message, 50)
+	line(52)
 	fmt.Println()
 }
 
