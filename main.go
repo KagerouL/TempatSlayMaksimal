@@ -70,6 +70,7 @@ var historyCountData int
 // ======================================================
 
 func logo() {
+	clearScreen()
 	var pink, logo string
 	pink = "\033[38;2;245;187;212m"
 	logo = fmt.Sprintf(`
@@ -107,6 +108,7 @@ func logo() {
 =======================================================================
 `, pink)
 	fmt.Println(logo)
+	next()
 }
 func title(text string) {
 	line(52)
@@ -120,6 +122,15 @@ func line(n int) {
 	for i = 0; i < n; i++ {
 		fmt.Print("=")
 	}
+	fmt.Println()
+}
+func lineSmall(n int) {
+	var i int
+	fmt.Print("+")
+	for i = 0; i < n-1; i++ {
+		fmt.Print("-")
+	}
+	fmt.Print("+")
 	fmt.Println()
 }
 
@@ -203,6 +214,7 @@ func crudMenu() {
 }
 
 func mainMenu() {
+	clearScreen()
 	var menus [5]string
 	var c int
 
@@ -389,7 +401,7 @@ func viewProductDetail(A ProductArray, c int) {
 	}
 }
 
-func updateProduct(A *ProductArray) {
+func updateProduct(data *ProductArray) {
 	var idx int
 	var id string
 	if countData == 0 {
@@ -397,9 +409,9 @@ func updateProduct(A *ProductArray) {
 		crudMenu()
 	}
 	title("MENU UPDATE")
+	printProduct(productsArr, countData)
 	fmt.Println("Masukan batal jika ingin kembali")
 	id = inputString("Masukan ID yang ingin diupdate: ")
-	fmt.Println(findIndexByID(productsArr, id))
 	if id == "batal" {
 		crudMenu()
 	}
@@ -413,16 +425,16 @@ func updateProduct(A *ProductArray) {
 		}
 	}
 	idx = findIndexByID(productsArr, id)
-	A[idx].Name = inputString("Nama Produk        : ")
-	A[idx].Category = inputString("Kategori           : ")
-	A[idx].Price = inputInt("Harga              : ")
+	data[idx].Name = inputString("Nama Produk        : ")
+	data[idx].Category = inputString("Kategori           : ")
+	data[idx].Price = inputInt("Harga              : ")
 
-	A[idx].BrandInfo.Name = inputString("Nama Brand         : ")
-	A[idx].BrandInfo.Country = inputString("Negara datasal Brand  : ")
+	data[idx].BrandInfo.Name = inputString("Nama Brand         : ")
+	data[idx].BrandInfo.Country = inputString("Negara datasal Brand  : ")
 
-	A[idx].DetailInfo.Description = inputString("Deskripsi Produk   : ")
-	A[idx].DetailInfo.SkinType = inputString("Jenis Kulit        : ")
-	A[idx].DetailInfo.ExpiredYear = inputInt("Tahun Kedaluwarsa  : ")
+	data[idx].DetailInfo.Description = inputString("Deskripsi Produk   : ")
+	data[idx].DetailInfo.SkinType = inputString("Jenis Kulit        : ")
+	data[idx].DetailInfo.ExpiredYear = inputInt("Tahun Kedaluwarsa  : ")
 
 	fmt.Println()
 	successMessage("Produk berhasil diperbarui!")
