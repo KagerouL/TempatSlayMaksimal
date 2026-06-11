@@ -214,7 +214,6 @@ func crudMenu() {
 }
 
 func mainMenu() {
-	clearScreen()
 	var menus [5]string
 	var c int
 
@@ -224,6 +223,7 @@ func mainMenu() {
 	menus[3] = "Sales"
 
 	for {
+		clearScreen()
 		showMenu("MAIN MENU", menus, 4)
 		c = inputInt("Pilih menu: ")
 		switch c {
@@ -793,7 +793,6 @@ func swap(A *Product, B *Product) {
 
 func printProduct(A ProductArray, n int) {
 	var i int
-
 	line(124)
 	fmt.Printf("%-10s | %-50s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
 	for i = 0; i < n; i++ {
