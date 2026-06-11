@@ -70,6 +70,7 @@ var historyCountData int
 // ======================================================
 
 func logo() {
+	clearScreen()
 	var pink, logo string
 	pink = "\033[38;2;245;187;212m"
 	logo = fmt.Sprintf(`
@@ -107,6 +108,7 @@ func logo() {
 =======================================================================
 `, pink)
 	fmt.Println(logo)
+	next()
 }
 func title(text string) {
 	line(52)
@@ -120,6 +122,15 @@ func line(n int) {
 	for i = 0; i < n; i++ {
 		fmt.Print("=")
 	}
+	fmt.Println()
+}
+func lineSmall(n int) {
+	var i int
+	fmt.Print("+")
+	for i = 0; i < n-1; i++ {
+		fmt.Print("-")
+	}
+	fmt.Print("+")
 	fmt.Println()
 }
 
@@ -151,10 +162,6 @@ func inputString(text string) string {
 
 func clearScreen() {
 	fmt.Print("\033[H\033[2J")
-}
-
-func pause() {
-
 }
 
 // ======================================================
@@ -207,6 +214,7 @@ func crudMenu() {
 }
 
 func mainMenu() {
+	clearScreen()
 	var menus [5]string
 	var c int
 
@@ -327,9 +335,10 @@ func viewProduct(A ProductArray, n int) {
 
 	menus[0] = "Semua Data"
 	menus[1] = "Data Spesifik"
+	menus[2] = "Data Detail"
 
 	for {
-		showMenu("View Menu", menus, 2)
+		showMenu("View Menu", menus, 3)
 		if len(A) == 0 {
 			fmt.Println("Belum ada data")
 			return
@@ -340,6 +349,8 @@ func viewProduct(A ProductArray, n int) {
 			case 1:
 				viewProductDetail(A, c)
 			case 2:
+				viewProductDetail(A, c)
+			case 3:
 				viewProductDetail(A, c)
 			case 0:
 				return
@@ -357,28 +368,37 @@ func viewProductDetail(A ProductArray, c int) {
 	var s string
 
 	if c == 1 {
-		printTableHeader()
-		line(124)
-		for i := 0; i < countData; i++ {
-			printProduct(A, i)
-		}
+		printProduct(A, countData)
 		line(124)
 	} else if c == 2 {
 		s = inputString("Masukkan ID data yang ingin dilihat: ")
-		i = binarySearchID(A, countData, s)
+		i = findIndexByID(A, s)
 
 		if i == -1 {
 			fmt.Println("Barang tidak ditemukan")
 			return
 		} else {
 			line(124)
-			printProduct(A, i)
+			printProductSpecific(A, i)
 			line(124)
 		}
+	} else if c == 3 {
+		s = inputString("Masukkan ID data yang ingin dilihat: ")
+		i = findIndexByID(A, s)
+
+		if i == -1 {
+			fmt.Println("Barang tidak ditemukan")
+			return
+		} else {
+			line(124)
+			printProductDetail(A, i)
+			line(124)
+		}
+
 	}
 }
 
-func updateProduct(A *ProductArray) {
+func updateProduct(data *ProductArray) {
 	var idx int
 	var id string
 	if countData == 0 {
@@ -386,9 +406,9 @@ func updateProduct(A *ProductArray) {
 		crudMenu()
 	}
 	title("MENU UPDATE")
+	printProduct(productsArr, countData)
 	fmt.Println("Masukan batal jika ingin kembali")
 	id = inputString("Masukan ID yang ingin diupdate: ")
-	fmt.Println(findIndexByID(productsArr, id))
 	if id == "batal" {
 		crudMenu()
 	}
@@ -402,19 +422,20 @@ func updateProduct(A *ProductArray) {
 		}
 	}
 	idx = findIndexByID(productsArr, id)
-	A[idx].Name = inputString("Nama Produk        : ")
-	A[idx].Category = inputString("Kategori           : ")
-	A[idx].Price = inputInt("Harga              : ")
+	data[idx].Name = inputString("Nama Produk        : ")
+	data[idx].Category = inputString("Kategori           : ")
+	data[idx].Price = inputInt("Harga              : ")
 
-	A[idx].BrandInfo.Name = inputString("Nama Brand         : ")
-	A[idx].BrandInfo.Country = inputString("Negara datasal Brand  : ")
+	data[idx].BrandInfo.Name = inputString("Nama Brand         : ")
+	data[idx].BrandInfo.Country = inputString("Negara datasal Brand  : ")
 
-	A[idx].DetailInfo.Description = inputString("Deskripsi Produk   : ")
-	A[idx].DetailInfo.SkinType = inputString("Jenis Kulit        : ")
-	A[idx].DetailInfo.ExpiredYear = inputInt("Tahun Kedaluwarsa  : ")
+	data[idx].DetailInfo.Description = inputString("Deskripsi Produk   : ")
+	data[idx].DetailInfo.SkinType = inputString("Jenis Kulit        : ")
+	data[idx].DetailInfo.ExpiredYear = inputInt("Tahun Kedaluwarsa  : ")
 
 	fmt.Println()
 	successMessage("Produk berhasil diperbarui!")
+	next()
 }
 
 func deleteProduct(A *ProductArray) {
@@ -445,6 +466,7 @@ func deleteProduct(A *ProductArray) {
 	}
 	countData--
 	successMessage("Produk berhasil dihapus")
+	next()
 }
 
 // ======================================================
@@ -769,18 +791,37 @@ func swap(A *Product, B *Product) {
 
 }
 
-func printTableHeader() {
+func printProduct(A ProductArray, n int) {
+	var i int
+
+	line(124)
 	fmt.Printf("%-10s | %-50s | %-20s | %-20s | %-10s |\n", "ID", "Nama", "Kategori", "Harga", "Terjual")
+	for i = 0; i < n; i++ {
+		fmt.Printf("%-10s | %-50s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+	}
 }
 
-func printProduct(A ProductArray, i int) {
+func printProductSpecific(A ProductArray, i int) {
 	fmt.Printf("%-10s | %-50s | %-20s | %-20d | %-10d |\n", A[i].ID, A[i].Name, A[i].Category, A[i].Price, A[i].Sold)
+}
+
+func printProductDetail(A ProductArray, n int) {
+	fmt.Printf("%-20s: %s \n%-20s: %s \n%-20s: %-20s \n%-20s: %d \n%-20s: %d \n%-20s: %s \n%-20s: %s \n%-20s: %s \n%-20s: %s \n%-20s: %d\n", "ID", A[n].ID, "Nama", A[n].Name, "Kategori", A[n].Category, "Harga", A[n].Price, "Terjual", A[n].Sold, "Nama Brand", A[n].BrandInfo.Name, "Negara Data Asal Brand", A[n].BrandInfo.Country, "Deskripsi Produk", A[n].DetailInfo.Description, "Jenis Kulit", A[n].DetailInfo.SkinType, "Tahun Kadaluarsa", A[n].DetailInfo.ExpiredYear)
+
+	v := A[n].VariantCount
+
+	line(45)
+	for i := 0; i < v; i++ {
+		fmt.Printf("Varian %d\n", i+1)
+		fmt.Printf("%-20s: %s \n%-20s: %s \n%-20s: %d\n", "Warna", A[i].Variants[i].Color, "Ukuran", A[i].Variants[i].Size, "Stok", A[i].Variants[i].Stock)
+	}
 }
 
 func next() {
 	fmt.Println("Tekan Enter untuk lanjut!!")
 	fmt.Scanln()
 	fmt.Scanln()
+	clearScreen()
 }
 
 func main() {
