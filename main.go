@@ -326,11 +326,14 @@ func viewProduct(A ProductArray, n int) {
 	menus[2] = "Data Detail"
 
 	for {
-		showMenu("View Menu", menus, 3)
-		if len(A) == 0 {
+		if isEmpty() {
+			line(52)
 			fmt.Println("Belum ada data")
+			line(52)
+			next()
 			return
 		} else {
+			showMenu("View Menu", menus, 3)
 			c = inputInt("Pilih menu: ")
 
 			switch c {
@@ -461,7 +464,10 @@ func deleteProduct(A *ProductArray) {
 // VALIDATION
 // ======================================================
 
-func isEmpty(n int) bool {
+func isEmpty() bool { 
+	if countData == 0 {
+		return true
+	}
 	return false
 }
 
