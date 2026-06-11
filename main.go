@@ -70,6 +70,7 @@ var historyCountData int
 // ======================================================
 
 func logo() {
+	clearScreen()
 	var pink, logo string
 	pink = "\033[38;2;245;187;212m"
 	logo = fmt.Sprintf(`
@@ -107,6 +108,7 @@ func logo() {
 =======================================================================
 `, pink)
 	fmt.Println(logo)
+	next()
 }
 func title(text string) {
 	line(52)
@@ -120,6 +122,15 @@ func line(n int) {
 	for i = 0; i < n; i++ {
 		fmt.Print("=")
 	}
+	fmt.Println()
+}
+func lineSmall(n int) {
+	var i int
+	fmt.Print("+")
+	for i = 0; i < n-1; i++ {
+		fmt.Print("-")
+	}
+	fmt.Print("+")
 	fmt.Println()
 }
 
@@ -207,6 +218,7 @@ func crudMenu() {
 }
 
 func mainMenu() {
+	clearScreen()
 	var menus [5]string
 	var c int
 
