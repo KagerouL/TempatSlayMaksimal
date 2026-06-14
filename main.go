@@ -158,7 +158,7 @@ var sizes [SIZE_COUNT]string = [SIZE_COUNT]string{
 	"100 ml",
 	"150 ml",
 	"200 ml",
-	"250 ml",
+	"250 ",
 	"500 ml",
 }
 
