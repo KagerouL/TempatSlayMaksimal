@@ -202,7 +202,7 @@ func crudMenu() {
 		case 3:
 			deleteProduct(&productsArr)
 		case 4:
-			viewProduct(productsArr, countData)
+			viewProduct(productsArr)
 		case 5:
 			clearScreen()
 		case 0:
@@ -230,7 +230,7 @@ func mainMenu() {
 		case 1:
 			crudMenu()
 		case 2:
-			viewProduct(productsArr, countData)
+			viewProduct(productsArr)
 		case 3:
 			fmt.Println("RECOMMENDATION")
 
@@ -247,15 +247,15 @@ func mainMenu() {
 	}
 }
 
-func searchMenu(A *ProductArray, n *int) {
+func searchMenu(A ProductArray, n int) {
+	
+}
+
+func sortMenu(A ProductArray, n int) {
 
 }
 
-func sortMenu(A *ProductArray, n *int) {
-
-}
-
-func salesMenu(A *ProductArray, n *int) {
+func salesMenu(A ProductArray, n int) {
 
 }
 
@@ -328,7 +328,7 @@ func createProduct(data *ProductArray) {
 	next()
 }
 
-func viewProduct(A ProductArray, n int) {
+func viewProduct(A ProductArray) {
 	clearScreen()
 	var menus [5]string
 	var c int
