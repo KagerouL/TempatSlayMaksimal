@@ -65,6 +65,84 @@ var productsArr ProductArray
 var countData int
 var historyCountData int
 
+
+
+func initDummyData(data *ProductArray) {
+	// Produk 1
+	data[0].ID = "TSM001"
+	data[0].Name = "Wardah_Lightening_Serum"
+	data[0].Category = "Serum"
+	data[0].Price = 85000
+	data[0].Sold = 120
+	data[0].BrandInfo.Name = "Wardah"
+	data[0].BrandInfo.Country = "Indonesia"
+	data[0].DetailInfo.Description = "Serum_pencerah_wajah"
+	data[0].DetailInfo.SkinType = "Normal"
+	data[0].DetailInfo.ExpiredYear = 2027
+	data[0].VariantCount = 1
+	data[0].Variants[0] = Variant{"Putih", "30ml", 50}
+
+	// Produk 2
+	data[1].ID = "TSM002"
+	data[1].Name = "Emina_Sun_Protection"
+	data[1].Category = "Sunscreen"
+	data[1].Price = 45000
+	data[1].Sold = 95
+	data[1].BrandInfo.Name = "Emina"
+	data[1].BrandInfo.Country = "Indonesia"
+	data[1].DetailInfo.Description = "Tabir_surya_SPF30"
+	data[1].DetailInfo.SkinType = "Semua"
+	data[1].DetailInfo.ExpiredYear = 2026
+	data[1].VariantCount = 1
+	data[1].Variants[0] = Variant{"Bening", "60ml", 30}
+
+	// Produk 3
+	data[2].ID = "TSM003"
+	data[2].Name = "Somethinc_Niacinamide"
+	data[2].Category = "Serum"
+	data[2].Price = 129000
+	data[2].Sold = 80
+	data[2].BrandInfo.Name = "Somethinc"
+	data[2].BrandInfo.Country = "Indonesia"
+	data[2].DetailInfo.Description = "Serum_anti_kusam"
+	data[2].DetailInfo.SkinType = "Berminyak"
+	data[2].DetailInfo.ExpiredYear = 2028
+	data[2].VariantCount = 1
+	data[2].Variants[0] = Variant{"Kuning", "20ml", 40}
+
+	// Produk 4
+	data[3].ID = "TSM004"
+	data[3].Name = "Azarine_Moisturizer"
+	data[3].Category = "Moisturizer"
+	data[3].Price = 65000
+	data[3].Sold = 60
+	data[3].BrandInfo.Name = "Azarine"
+	data[3].BrandInfo.Country = "Indonesia"
+	data[3].DetailInfo.Description = "Pelembab_ringan_harian"
+	data[3].DetailInfo.SkinType = "Kering"
+	data[3].DetailInfo.ExpiredYear = 2027
+	data[3].VariantCount = 1
+	data[3].Variants[0] = Variant{"Putih", "50ml", 25}
+
+	// Produk 5
+	data[4].ID = "TSM005"
+	data[4].Name = "Implora_Lip_Cream"
+	data[4].Category = "Makeup"
+	data[4].Price = 25000
+	data[4].Sold = 200
+	data[4].BrandInfo.Name = "Implora"
+	data[4].BrandInfo.Country = "Indonesia"
+	data[4].DetailInfo.Description = "Lip_cream_tahan_lama"
+	data[4].DetailInfo.SkinType = "Semua"
+	data[4].DetailInfo.ExpiredYear = 2026
+	data[4].VariantCount = 2
+	data[4].Variants[0] = Variant{"Merah", "3ml", 60}
+	data[4].Variants[1] = Variant{"Nude", "3ml", 45}
+
+	countData = 5
+	historyCountData = 5
+}
+
 // ======================================================
 // UTILITY
 // ======================================================
@@ -547,27 +625,6 @@ func binarySearchID(A ProductArray, n int, id string) int {
 	return -1
 }
 
-func binarySearchPrice(A ProductArray, n int, price int) int {
-	var left, right, mid int
-
-	left = 0
-	right = n
-
-	for left <= right {
-		mid = (left + right) / 2
-
-		if A[mid].Price == price {
-			return mid
-		} else if A[mid].Price < price {
-			left = mid + 1
-		} else {
-			right = mid - 1
-		}
-	}
-
-	return -1
-}
-
 // ======================================================
 // SORTING
 // ======================================================
@@ -831,6 +888,7 @@ func next() {
 }
 
 func main() {
+	initDummyData(&productsArr)
 	logo()
 	mainMenu()
 }
