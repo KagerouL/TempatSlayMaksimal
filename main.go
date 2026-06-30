@@ -1636,22 +1636,14 @@ func bestSellingRecommendation() {
 
 	var sorted ProductArray
 	sorted = productsArr
-	var i, j int
-	var temp Product
-	for i = 1; i < countData; i++ {
-		j = i
-		temp = sorted[j]
-		for j > 0 && temp.Sold > sorted[j-1].Sold {
-			sorted[j] = sorted[j-1]
-			j = j - 1
-		}
-		sorted[j] = temp
-	}
+	var i int
+	insertionSortSoldDesc(&sorted, countData)
 
 	fmt.Println()
 	hLine(80)
 	fmt.Printf("  %-10s | %-35s | %-15s | %-8s\n", "ID", "Nama Produk", "Harga (Rp)", "Terjual")
 	hLineThin(80)
+
 	var limit int
 	limit = countData
 	if limit > 5 {
@@ -1746,9 +1738,10 @@ func leastSoldProduct() {
 		return
 	}
 
+	var i int
 	var least int
 	least = 0
-	var i int
+	
 	for i = 1; i < countData; i++ {
 		if productsArr[i].Sold < productsArr[least].Sold {
 			least = i
@@ -1761,9 +1754,10 @@ func leastSoldProduct() {
 }
 
 func totalSales() int {
+	var i int
 	var total int
 	total = 0
-	var i int
+
 	for i = 0; i < countData; i++ {
 		total = total + productsArr[i].Sold
 	}
@@ -1852,6 +1846,20 @@ func insertionSortPriceDesc(A *ProductArray, n int) {
 		j = i
 		temp = A[j]
 		for j > 0 && temp.Price > A[j-1].Price {
+			A[j] = A[j-1]
+			j = j - 1
+		}
+		A[j] = temp
+	}
+}
+
+func insertionSortSoldDesc(A *ProductArray, n int) {
+	var i, j int
+	var temp Product
+	for i = 1; i <= n-1; i++ {
+		j = i
+		temp = A[j]
+		for j > 0 && temp.Sold > A[j-1].Sold {
 			A[j] = A[j-1]
 			j = j - 1
 		}
@@ -1956,7 +1964,7 @@ func inputValidYear(prompt string) int {
 	valid = false
 	for !valid {
 		val = inputInt(prompt)
-		if val < 2024 {
+		if val < 2026 {
 			msgWarning("Tahun kedaluwarsa tidak valid! Minimal 2024.")
 		} else if val > 2100 {
 			msgWarning("Tahun kedaluwarsa tidak masuk akal! Maksimal 2100.")
