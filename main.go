@@ -978,11 +978,23 @@ func mainMenu() {
 		case 4:
 			salesMenu()
 		case 0:
-			clearScreen()
-			fmt.Println()
-			msgInfo("Program selesai. Terima kasih!")
-			fmt.Println()
-			return
+			var confirm string
+			for {
+				confirm = inputStringConfirm("Apakah Anda yakin ingin keluar dari program?")
+				if confirm == "y" || confirm == "Y" {
+					clearScreen()
+					fmt.Println()
+					msgInfo("Program selesai. Terima kasih!")
+					fmt.Println()
+					return
+				}
+				if confirm == "n" || confirm == "N" {
+					clearScreen()
+					mainMenu()
+					return
+				}
+				msgWarning("Masukkan hanya 'y' atau 'n'.")
+			}
 		default:
 			msgWarning("Menu tidak tersedia. Pilih 0-4.")
 		}
@@ -1023,14 +1035,15 @@ func crudMenu() {
 func viewMenu() {
 	if isEmpty() {
 		msgWarning("Belum ada data produk.")
-		next()
 		return
 	}
 	for {
 		var items = []string{
-			"Semua Produk (Ringkas)",
+			"Semua Produk",
 			"Cari Produk by ID",
+			"Cari Produk by Nama",
 			"Detail Lengkap Produk",
+			"Urutkan Produk",
 		}
 		renderMenu("LIHAT PRODUK", items)
 		var c int
@@ -1040,15 +1053,31 @@ func viewMenu() {
 			printAllProducts()
 			next()
 		case 2:
+			clearScreen()
+			pageTitle("CARI PRODUK BY ID")
+			fmt.Println("  (Binary Search — ID harus urut)")
+			fmt.Println()
 			viewByID(false)
 			next()
 		case 3:
+			clearScreen()
+			pageTitle("CARI PRODUK BY NAMA")
+			fmt.Println("  (Sequential Search)")
+			fmt.Println()
+			searchByName()
+			next()
+		case 4:
+			clearScreen()
+			pageTitle("DETAIL LENGKAP PRODUK")
+			fmt.Println()
 			viewByID(true)
 			next()
+		case 5:
+			sortMenu()
 		case 0:
 			return
 		default:
-			msgWarning("Menu tidak tersedia. Pilih 0-3.")
+			msgWarning("Menu tidak tersedia. Pilih 0-5.")
 		}
 		clearScreen()
 	}
@@ -1101,6 +1130,39 @@ func salesMenu() {
 			return
 		default:
 			msgWarning("Menu tidak tersedia. Pilih 0-3.")
+		}
+		clearScreen()
+	}
+}
+
+func sortMenu() {
+	for {
+		var items = []string{
+			"Harga: Murah -> Mahal  (Insertion Sort)",
+			"Harga: Mahal -> Murah  (Insertion Sort)",
+			"Nama:  A -> Z          (Selection Sort)",
+			"Nama:  Z -> A          (Selection Sort)",
+		}
+		renderMenu("URUTKAN PRODUK", items)
+		var c int
+		c = inputInt("Pilih urutan: ")
+		switch c {
+		case 1:
+			printSortedProducts("insertion_asc")
+			next()
+		case 2:
+			printSortedProducts("insertion_desc")
+			next()
+		case 3:
+			printSortedProducts("selection_asc")
+			next()
+		case 4:
+			printSortedProducts("selection_desc")
+			next()
+		case 0:
+			return
+		default:
+			msgWarning("Menu tidak tersedia. Pilih 0-4.")
 		}
 		clearScreen()
 	}
@@ -1671,6 +1733,54 @@ func printProductDetail(idx int) {
 	hLineSep(60)
 }
 
+func printSortedProducts(mode string) {
+	clearScreen()
+
+	var sorted ProductArray
+	sorted = productsArr
+
+	if mode == "insertion_asc" {
+		pageTitle("PRODUK: HARGA MURAH KE MAHAL")
+		insertionSortPriceAsc(&sorted, countData)
+	} else if mode == "insertion_desc" {
+		pageTitle("PRODUK: HARGA MAHAL KE MURAH")
+		insertionSortPriceDesc(&sorted, countData)
+	} else if mode == "selection_asc" {
+		pageTitle("PRODUK: NAMA A -> Z")
+		selectionSortNameAsc(&sorted, countData)
+	} else {
+		pageTitle("PRODUK: NAMA Z -> A")
+		selectionSortNameDesc(&sorted, countData)
+	}
+
+	var w int
+	w = 120
+	hLine(w)
+	fmt.Printf("  %-10s | %-40s | %-18s | %-14s | %-8s\n",
+		"ID", "Nama Produk", "Kategori", "Harga (Rp)", "Terjual")
+	hLineThin(w)
+
+	var i int
+	for i = 0; i < countData; i++ {
+		fmt.Printf("  %-10s | %-40s | %-18s | %-14d | %-8d\n",
+			sorted[i].ID,
+			sorted[i].Name,
+			sorted[i].Category,
+			sorted[i].Price,
+			sorted[i].Sold,
+		)
+	}
+	hLine(w)
+	fmt.Printf("  Total produk: %d\n", countData)
+	fmt.Println()
+
+	if mode == "insertion_asc" || mode == "insertion_desc" {
+		fmt.Println("  [Algoritma: Insertion Sort]")
+	} else {
+		fmt.Println("  [Algoritma: Selection Sort]")
+	}
+}
+
 // ======================================================
 // RECOMMENDATION
 // ======================================================
@@ -1825,6 +1935,31 @@ func totalSales() int {
 // ======================================================
 // SEARCHING
 // ======================================================
+func searchByName() {
+	var name string
+	name = inputString("Masukkan nama produk: ")
+
+	var idx int
+	idx = sequentialSearchName(name)
+
+	if idx == -1 {
+		msgError("Produk dengan nama '" + name + "' tidak ditemukan.")
+		return
+	}
+
+	fmt.Println()
+	hLineSep(54)
+	boxRow("PRODUK DITEMUKAN", 54)
+	hLineSep(54)
+	printProductRow(idx)
+	fmt.Println()
+
+	var jawab string
+	jawab = inputStringConfirm("Tampilkan detail lengkap?")
+	if jawab == "y" || jawab == "Y" {
+		printProductDetail(idx)
+	}
+}
 
 func sequentialSearchName(name string) int {
 	var i int
