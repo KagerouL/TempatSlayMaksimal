@@ -9,10 +9,6 @@ const (
 	MAX_VARIANT     int = 5
 	MAX_REVIEW      int = 10
 	MAX_ITEM        int = 10
-	CATEGORY_COUNT  int = 50
-	COUNTRY_COUNT   int = 15
-	SKIN_TYPE_COUNT int = 6
-	SIZE_COUNT      int = 12
 )
 
 type Brand struct {
