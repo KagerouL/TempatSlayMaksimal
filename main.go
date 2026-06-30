@@ -797,8 +797,8 @@ func logo() {
 func pageTitle(text string) {
 	fmt.Println()
 	boxTop(54)
-	fmt.Println("|              ANDA BERADA DI              |")
-	fmt.Println("|  " + text)
+
+	fmt.Printf("| %-50s |\n", text)
 	boxBottom(54)
 	fmt.Println()
 }
@@ -1126,27 +1126,6 @@ func sortMenu() {
 // ======================================================
 // CRUD
 // ======================================================
-func selectCategory() string {
-	var i int
-	var choice int
-
-	fmt.Println()
-	fmt.Println("===== DAFTAR KATEGORI =====")
-
-	for i = 0; i < CATEGORY_COUNT; i++ {
-		fmt.Printf("%2d. %s\n", i+1, categories[i])
-	}
-
-	for choice < 1 || choice > CATEGORY_COUNT {
-		choice = inputInt("Pilih Kategori : ")
-
-		if choice < 1 || choice > CATEGORY_COUNT {
-			msgWarning("Pilihan tidak valid.")
-		}
-	}
-
-	return categories[choice-1]
-}
 
 func createProduct() {
 	clearScreen()
