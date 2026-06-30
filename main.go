@@ -896,10 +896,10 @@ func inputStringConfirm(prompt string) string {
 // MENU RENDERER
 // ======================================================
 
-func renderMenu(titleText string, items []string) {
+func renderMenu(titleText string, items []string, n int) {
 	pageTitle(titleText)
 	var i int
-	for i = 0; i < len(items); i++ {
+	for i = 0; i < n; i++ {
 		fmt.Printf("  %d.  %s\n", i+1, items[i])
 	}
 	fmt.Println("  0.  Kembali")
@@ -920,7 +920,7 @@ func mainMenu() {
 			"Rekomendasi",
 			"Laporan Penjualan",
 		}
-		renderMenu("MENU UTAMA", items)
+		renderMenu("MENU UTAMA", items, 4)
 		var c int
 		c = inputInt("Pilih menu: ")
 		switch c {
@@ -965,7 +965,7 @@ func crudMenu() {
 			"Hapus Produk",
 			"Lihat Semua Produk",
 		}
-		renderMenu("KELOLA PRODUK", items)
+		renderMenu("KELOLA PRODUK", items, 4)
 		var c int
 		c = inputInt("Pilih menu: ")
 		switch c {
@@ -1000,7 +1000,7 @@ func viewMenu() {
 			"Detail Lengkap Produk",
 			"Urutkan Produk",
 		}
-		renderMenu("LIHAT PRODUK", items)
+		renderMenu("LIHAT PRODUK", items, 5)
 		var c int
 		c = inputInt("Pilih menu: ")
 		switch c {
@@ -1044,7 +1044,7 @@ func recommendationMenu() {
 			"Produk Terlaris",
 			"Stok Menipis",
 		}
-		renderMenu("REKOMENDASI", items)
+		renderMenu("REKOMENDASI", items, 2)
 		var c int
 		c = inputInt("Pilih menu: ")
 		switch c {
@@ -1068,7 +1068,7 @@ func salesMenu() {
 			"Produk Paling Sedikit Laku",
 			"Total Penjualan",
 		}
-		renderMenu("LAPORAN PENJUALAN", items)
+		renderMenu("LAPORAN PENJUALAN", items, 3)
 		var c int
 		c = inputInt("Pilih menu: ")
 		switch c {
@@ -1098,7 +1098,7 @@ func sortMenu() {
 			"Nama:  A -> Z          (Selection Sort)",
 			"Nama:  Z -> A          (Selection Sort)",
 		}
-		renderMenu("URUTKAN PRODUK", items)
+		renderMenu("URUTKAN PRODUK", items, 4)
 		var c int
 		c = inputInt("Pilih urutan: ")
 		switch c {
