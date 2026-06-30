@@ -769,6 +769,19 @@ func boxRowLeft(text string, width int) {
 	fmt.Println()
 }
 
+func centerText(text string, width int) {
+	var pad, left, i int
+	pad = width - len(text)
+	if pad < 0 {
+		pad = 0
+	}
+	left = pad / 2
+	for i = 0; i < left; i++ {
+		fmt.Print(" ")
+	}
+	fmt.Println(text)
+}
+
 func clearScreen() {
 	fmt.Print("\033[H\033[2J")
 }
@@ -848,6 +861,8 @@ func msgSuccess(msg string) {
 	boxRow(msg, 54)
 	boxBottom(54)
 	fmt.Println()
+	centerText("Tekan Enter untuk melanjutkan!!", 32)
+	fmt.Scanln()
 }
 
 func msgError(msg string) {
@@ -858,6 +873,8 @@ func msgError(msg string) {
 	boxRow(msg, 54)
 	boxBottom(54)
 	fmt.Println()
+	centerText("Tekan Enter untuk melanjutkan!!", 32)
+	fmt.Scanln()
 }
 
 func msgWarning(msg string) {
@@ -868,6 +885,8 @@ func msgWarning(msg string) {
 	boxRow(msg, 54)
 	boxBottom(54)
 	fmt.Println()
+	centerText("Tekan Enter untuk melanjutkan!!", 32)
+	fmt.Scanln()
 }
 
 func msgInfo(msg string) {
@@ -876,6 +895,8 @@ func msgInfo(msg string) {
 	boxRowLeft(msg, 54)
 	hLineSep(54)
 	fmt.Println()
+	centerText("Tekan Enter untuk melanjutkan!!", 32)
+	fmt.Scanln()
 }
 
 // ======================================================
@@ -945,7 +966,8 @@ func mainMenu() {
 			"Laporan Penjualan",
 		}
 		renderMenu("MENU UTAMA", items)
-		c := inputInt("Pilih menu: ")
+		var c int
+		c = inputInt("Pilih menu: ")
 		switch c {
 		case 1:
 			crudMenu()
@@ -964,6 +986,7 @@ func mainMenu() {
 		default:
 			msgWarning("Menu tidak tersedia. Pilih 0-4.")
 		}
+		clearScreen()
 	}
 }
 
@@ -976,7 +999,8 @@ func crudMenu() {
 			"Lihat Semua Produk",
 		}
 		renderMenu("KELOLA PRODUK", items)
-		c := inputInt("Pilih menu: ")
+		var c int
+		c = inputInt("Pilih menu: ")
 		switch c {
 		case 1:
 			createProduct()
@@ -992,6 +1016,7 @@ func crudMenu() {
 		default:
 			msgWarning("Menu tidak tersedia. Pilih 0-4.")
 		}
+		clearScreen()
 	}
 }
 
@@ -1008,7 +1033,8 @@ func viewMenu() {
 			"Detail Lengkap Produk",
 		}
 		renderMenu("LIHAT PRODUK", items)
-		c := inputInt("Pilih menu: ")
+		var c int
+		c = inputInt("Pilih menu: ")
 		switch c {
 		case 1:
 			printAllProducts()
@@ -1024,6 +1050,7 @@ func viewMenu() {
 		default:
 			msgWarning("Menu tidak tersedia. Pilih 0-3.")
 		}
+		clearScreen()
 	}
 }
 
@@ -1034,7 +1061,8 @@ func recommendationMenu() {
 			"Stok Menipis",
 		}
 		renderMenu("REKOMENDASI", items)
-		c := inputInt("Pilih menu: ")
+		var c int
+		c = inputInt("Pilih menu: ")
 		switch c {
 		case 1:
 			bestSellingRecommendation()
@@ -1045,6 +1073,7 @@ func recommendationMenu() {
 		default:
 			msgWarning("Menu tidak tersedia. Pilih 0-2.")
 		}
+		clearScreen()
 	}
 }
 
@@ -1056,7 +1085,8 @@ func salesMenu() {
 			"Total Penjualan",
 		}
 		renderMenu("LAPORAN PENJUALAN", items)
-		var c = inputInt("Pilih menu: ")
+		var c int
+		c = inputInt("Pilih menu: ")
 		switch c {
 		case 1:
 			mostSoldProduct()
@@ -1072,6 +1102,7 @@ func salesMenu() {
 		default:
 			msgWarning("Menu tidak tersedia. Pilih 0-3.")
 		}
+		clearScreen()
 	}
 }
 
@@ -1115,7 +1146,7 @@ func createProduct() {
 
 	fmt.Println()
 	hLineSep(54)
-	boxRow("INFO PRODUK", 54)
+	boxRow("LANGKAH 1/4 - INFO PRODUK", 54)
 	hLineSep(54)
 
 	p.Name = inputValidString("Nama Produk        : ", 50)
@@ -1124,7 +1155,7 @@ func createProduct() {
 
 	fmt.Println()
 	hLineSep(54)
-	boxRow("INFO BRAND", 54)
+	boxRow("LANGKAH 2/4 - INFO BRAND", 54)
 	hLineSep(54)
 
 	p.BrandInfo.Name = inputValidString("Nama Brand         : ", 50)
@@ -1132,7 +1163,7 @@ func createProduct() {
 
 	fmt.Println()
 	hLineSep(54)
-	boxRow("DETAIL PRODUK", 54)
+	boxRow("LANGKAH 3/4 - DETAIL PRODUK", 54)
 	hLineSep(54)
 
 	p.DetailInfo.Description = inputValidString("Deskripsi          : ", 100)
@@ -1141,10 +1172,11 @@ func createProduct() {
 
 	fmt.Println()
 	hLineSep(54)
-	boxRow("VARIAN PRODUK", 54)
+	boxRow("LANGKAH 4/4 - VARIAN PRODUK", 54)
 	hLineSep(54)
 
-	var variantCount int = 0
+	var variantCount int
+	variantCount = 0
 	for variantCount < 1 || variantCount > MAX_VARIANT {
 		variantCount = inputInt(fmt.Sprintf("Jumlah Varian (1-%d): ", MAX_VARIANT))
 		if variantCount < 1 || variantCount > MAX_VARIANT {
@@ -1156,7 +1188,7 @@ func createProduct() {
 	var i int
 	for i = 0; i < p.VariantCount; i++ {
 		fmt.Println()
-		fmt.Printf("  -- Varian %d --\n", i+1)
+		fmt.Printf("  -- Varian %d dari %d --\n", i+1, p.VariantCount)
 		p.Variants[i].Color = inputValidString("  Warna  : ", 20)
 		p.Variants[i].Size = inputValidString("  Ukuran : ", 10)
 		p.Variants[i].Stock = inputValidStock("  Stok   : ")
@@ -1168,13 +1200,21 @@ func createProduct() {
 	p.ReviewCount = 0
 
 	// Konfirmasi
-	fmt.Println()
+	clearScreen()
+	pageTitle("KONFIRMASI PRODUK BARU")
 	hLineSep(54)
-	fmt.Printf("  ID yang akan dibuat: %s\n", p.ID)
+	boxRow("RINGKASAN DATA", 54)
+	hLineSep(54)
+	fmt.Printf("  ID Baru            : %s\n", p.ID)
 	fmt.Printf("  Nama               : %s\n", p.Name)
+	fmt.Printf("  Kategori           : %s\n", p.Category)
 	fmt.Printf("  Harga              : Rp %d\n", p.Price)
+	fmt.Printf("  Brand              : %s (%s)\n", p.BrandInfo.Name, p.BrandInfo.Country)
+	fmt.Printf("  Jumlah Varian      : %d\n", p.VariantCount)
 	hLineSep(54)
-	var confirm string = inputStringConfirm("Simpan produk ini?")
+
+	var confirm string
+	confirm = inputStringConfirm("Simpan produk ini?")
 	if confirm != "y" && confirm != "Y" {
 		msgInfo("Penambahan produk dibatalkan.")
 		next()
@@ -1202,7 +1242,7 @@ func updateProduct() {
 	printAllProducts()
 
 	fmt.Println()
-	fmt.Println("Ketik 'batal' untuk membatalkan.")
+	fmt.Println("  Ketik 'batal' untuk membatalkan.")
 
 	var id string
 	id = inputString("ID yang ingin diperbarui: ")
@@ -1227,37 +1267,38 @@ func updateProduct() {
 	oldData = productsArr[idx]
 
 	clearScreen()
-	pageTitle("MENU UPDATE PRODUK")
+	pageTitle("DATA SAAT INI")
 
-	fmt.Println("Data Saat Ini")
+	hLineSep(60)
+	fmt.Println("  ID              :", productsArr[idx].ID)
+	fmt.Println("  Nama            :", productsArr[idx].Name)
+	fmt.Println("  Kategori        :", productsArr[idx].Category)
+	fmt.Println("  Harga           :", productsArr[idx].Price)
+	fmt.Println("  Brand           :", productsArr[idx].BrandInfo.Name)
+	fmt.Println("  Negara Brand    :", productsArr[idx].BrandInfo.Country)
+	fmt.Println("  Deskripsi       :", productsArr[idx].DetailInfo.Description)
+	fmt.Println("  Jenis Kulit     :", productsArr[idx].DetailInfo.SkinType)
+	fmt.Println("  Tahun Expired   :", productsArr[idx].DetailInfo.ExpiredYear)
 	hLineSep(60)
 
-	fmt.Println("ID              :", productsArr[idx].ID)
-	fmt.Println("Nama            :", productsArr[idx].Name)
-	fmt.Println("Kategori        :", productsArr[idx].Category)
-	fmt.Println("Harga           :", productsArr[idx].Price)
-	fmt.Println("Brand           :", productsArr[idx].BrandInfo.Name)
-	fmt.Println("Negara Brand    :", productsArr[idx].BrandInfo.Country)
-	fmt.Println("Deskripsi       :", productsArr[idx].DetailInfo.Description)
-	fmt.Println("Jenis Kulit     :", productsArr[idx].DetailInfo.SkinType)
-	fmt.Println("Tahun Expired   :", productsArr[idx].DetailInfo.ExpiredYear)
-
 	fmt.Println()
-	fmt.Println("1. Update Nama Produk")
-	fmt.Println("2. Update Kategori")
-	fmt.Println("3. Update Harga")
-	fmt.Println("4. Update Nama Brand")
-	fmt.Println("5. Update Negara Brand")
-	fmt.Println("6. Update Deskripsi")
-	fmt.Println("7. Update Jenis Kulit")
-	fmt.Println("8. Update Tahun Expired")
-	fmt.Println("9. Update Semua Data")
-	fmt.Println("0. Batal")
+	fmt.Println("  Pilih bagian yang ingin diperbarui:")
+	fmt.Println()
+	fmt.Println("  1. Nama Produk")
+	fmt.Println("  2. Kategori")
+	fmt.Println("  3. Harga")
+	fmt.Println("  4. Nama Brand")
+	fmt.Println("  5. Negara Brand")
+	fmt.Println("  6. Deskripsi")
+	fmt.Println("  7. Jenis Kulit")
+	fmt.Println("  8. Tahun Expired")
+	fmt.Println("  9. Update Semua Data")
+	fmt.Println("  0. Batal")
+	fmt.Println()
+	hLineThin(60)
 
 	var pilihan int
-
-	fmt.Print("Pilih Menu : ")
-	fmt.Scan(&pilihan)
+	pilihan = inputInt("Pilih Menu : ")
 
 	switch pilihan {
 
@@ -1267,38 +1308,56 @@ func updateProduct() {
 		return
 
 	case 1:
+		clearScreen()
+		pageTitle("UPDATE NAMA PRODUK")
 		productsArr[idx].Name =
 			inputValidString("Nama Produk Baru : ", 50)
 
 	case 2:
+		clearScreen()
+		pageTitle("UPDATE KATEGORI")
 		productsArr[idx].Category =
 			inputValidString("Kategori Baru : ", 30)
 
 	case 3:
+		clearScreen()
+		pageTitle("UPDATE HARGA")
 		productsArr[idx].Price =
 			inputValidPrice("Harga Baru : ")
 
 	case 4:
+		clearScreen()
+		pageTitle("UPDATE NAMA BRAND")
 		productsArr[idx].BrandInfo.Name =
 			inputValidString("Nama Brand Baru : ", 50)
 
 	case 5:
+		clearScreen()
+		pageTitle("UPDATE NEGARA BRAND")
 		productsArr[idx].BrandInfo.Country =
 			inputValidString("Negara Brand Baru : ", 30)
 
 	case 6:
+		clearScreen()
+		pageTitle("UPDATE DESKRIPSI")
 		productsArr[idx].DetailInfo.Description =
 			inputValidString("Deskripsi Baru : ", 100)
 
 	case 7:
+		clearScreen()
+		pageTitle("UPDATE JENIS KULIT")
 		productsArr[idx].DetailInfo.SkinType =
 			inputValidString("Jenis Kulit Baru : ", 30)
 
 	case 8:
+		clearScreen()
+		pageTitle("UPDATE TAHUN EXPIRED")
 		productsArr[idx].DetailInfo.ExpiredYear =
 			inputValidYear("Tahun Expired Baru : ")
 
 	case 9:
+		clearScreen()
+		pageTitle("UPDATE SEMUA DATA")
 
 		hLineSep(54)
 		boxRow("INFO PRODUK", 54)
@@ -1313,6 +1372,7 @@ func updateProduct() {
 		productsArr[idx].Price =
 			inputValidPrice("Harga (Rp)         : ")
 
+		fmt.Println()
 		hLineSep(54)
 		boxRow("INFO BRAND", 54)
 		hLineSep(54)
@@ -1323,6 +1383,7 @@ func updateProduct() {
 		productsArr[idx].BrandInfo.Country =
 			inputValidString("Negara Asal Brand  : ", 30)
 
+		fmt.Println()
 		hLineSep(54)
 		boxRow("DETAIL PRODUK", 54)
 		hLineSep(54)
@@ -1346,71 +1407,84 @@ func updateProduct() {
 	pageTitle("HASIL UPDATE PRODUK")
 
 	hLineSep(60)
-	boxRow("DATA SEBELUM UPDATE", 60)
+	boxRow("SEBELUM", 60)
 	hLineSep(60)
-
-	fmt.Println("ID              :", oldData.ID)
-	fmt.Println("Nama            :", oldData.Name)
-	fmt.Println("Kategori        :", oldData.Category)
-	fmt.Println("Harga           :", oldData.Price)
-	fmt.Println("Brand           :", oldData.BrandInfo.Name)
-	fmt.Println("Negara Brand    :", oldData.BrandInfo.Country)
-	fmt.Println("Deskripsi       :", oldData.DetailInfo.Description)
-	fmt.Println("Jenis Kulit     :", oldData.DetailInfo.SkinType)
-	fmt.Println("Tahun Expired   :", oldData.DetailInfo.ExpiredYear)
+	fmt.Println("  ID              :", oldData.ID)
+	fmt.Println("  Nama            :", oldData.Name)
+	fmt.Println("  Kategori        :", oldData.Category)
+	fmt.Println("  Harga           :", oldData.Price)
+	fmt.Println("  Brand           :", oldData.BrandInfo.Name)
+	fmt.Println("  Negara Brand    :", oldData.BrandInfo.Country)
+	fmt.Println("  Deskripsi       :", oldData.DetailInfo.Description)
+	fmt.Println("  Jenis Kulit     :", oldData.DetailInfo.SkinType)
+	fmt.Println("  Tahun Expired   :", oldData.DetailInfo.ExpiredYear)
 
 	fmt.Println()
 
 	hLineSep(60)
-	boxRow("DATA SETELAH UPDATE", 60)
+	boxRow("SESUDAH", 60)
 	hLineSep(60)
-
-	fmt.Println("ID              :", productsArr[idx].ID)
-	fmt.Println("Nama            :", productsArr[idx].Name)
-	fmt.Println("Kategori        :", productsArr[idx].Category)
-	fmt.Println("Harga           :", productsArr[idx].Price)
-	fmt.Println("Brand           :", productsArr[idx].BrandInfo.Name)
-	fmt.Println("Negara Brand    :", productsArr[idx].BrandInfo.Country)
-	fmt.Println("Deskripsi       :", productsArr[idx].DetailInfo.Description)
-	fmt.Println("Jenis Kulit     :", productsArr[idx].DetailInfo.SkinType)
-	fmt.Println("Tahun Expired   :", productsArr[idx].DetailInfo.ExpiredYear)
+	fmt.Println("  ID              :", productsArr[idx].ID)
+	fmt.Println("  Nama            :", productsArr[idx].Name)
+	fmt.Println("  Kategori        :", productsArr[idx].Category)
+	fmt.Println("  Harga           :", productsArr[idx].Price)
+	fmt.Println("  Brand           :", productsArr[idx].BrandInfo.Name)
+	fmt.Println("  Negara Brand    :", productsArr[idx].BrandInfo.Country)
+	fmt.Println("  Deskripsi       :", productsArr[idx].DetailInfo.Description)
+	fmt.Println("  Jenis Kulit     :", productsArr[idx].DetailInfo.SkinType)
+	fmt.Println("  Tahun Expired   :", productsArr[idx].DetailInfo.ExpiredYear)
 
 	fmt.Println()
 
 	hLineSep(60)
-	boxRow("PERUBAHAN DATA", 60)
+	boxRow("RINGKASAN PERUBAHAN", 60)
 	hLineSep(60)
+
+	var adaPerubahan bool
+	adaPerubahan = false
 
 	if oldData.Name != productsArr[idx].Name {
-		fmt.Println("Nama :", oldData.Name, "->", productsArr[idx].Name)
+		fmt.Println("  Nama :", oldData.Name, "->", productsArr[idx].Name)
+		adaPerubahan = true
 	}
 
 	if oldData.Category != productsArr[idx].Category {
-		fmt.Println("Kategori :", oldData.Category, "->", productsArr[idx].Category)
+		fmt.Println("  Kategori :", oldData.Category, "->", productsArr[idx].Category)
+		adaPerubahan = true
 	}
 
 	if oldData.Price != productsArr[idx].Price {
-		fmt.Println("Harga :", oldData.Price, "->", productsArr[idx].Price)
+		fmt.Println("  Harga :", oldData.Price, "->", productsArr[idx].Price)
+		adaPerubahan = true
 	}
 
 	if oldData.BrandInfo.Name != productsArr[idx].BrandInfo.Name {
-		fmt.Println("Brand :", oldData.BrandInfo.Name, "->", productsArr[idx].BrandInfo.Name)
+		fmt.Println("  Brand :", oldData.BrandInfo.Name, "->", productsArr[idx].BrandInfo.Name)
+		adaPerubahan = true
 	}
 
 	if oldData.BrandInfo.Country != productsArr[idx].BrandInfo.Country {
-		fmt.Println("Negara Brand :", oldData.BrandInfo.Country, "->", productsArr[idx].BrandInfo.Country)
+		fmt.Println("  Negara Brand :", oldData.BrandInfo.Country, "->", productsArr[idx].BrandInfo.Country)
+		adaPerubahan = true
 	}
 
 	if oldData.DetailInfo.Description != productsArr[idx].DetailInfo.Description {
-		fmt.Println("Deskripsi :", oldData.DetailInfo.Description, "->", productsArr[idx].DetailInfo.Description)
+		fmt.Println("  Deskripsi :", oldData.DetailInfo.Description, "->", productsArr[idx].DetailInfo.Description)
+		adaPerubahan = true
 	}
 
 	if oldData.DetailInfo.SkinType != productsArr[idx].DetailInfo.SkinType {
-		fmt.Println("Jenis Kulit :", oldData.DetailInfo.SkinType, "->", productsArr[idx].DetailInfo.SkinType)
+		fmt.Println("  Jenis Kulit :", oldData.DetailInfo.SkinType, "->", productsArr[idx].DetailInfo.SkinType)
+		adaPerubahan = true
 	}
 
 	if oldData.DetailInfo.ExpiredYear != productsArr[idx].DetailInfo.ExpiredYear {
-		fmt.Println("Tahun Expired :", oldData.DetailInfo.ExpiredYear, "->", productsArr[idx].DetailInfo.ExpiredYear)
+		fmt.Println("  Tahun Expired :", oldData.DetailInfo.ExpiredYear, "->", productsArr[idx].DetailInfo.ExpiredYear)
+		adaPerubahan = true
+	}
+
+	if !adaPerubahan {
+		fmt.Println("  (Tidak ada perubahan data)")
 	}
 
 	fmt.Println()
@@ -1431,28 +1505,37 @@ func deleteProduct() {
 	printAllProducts()
 	fmt.Println()
 	fmt.Println("  Ketik 'batal' untuk membatalkan.")
-	id := inputString("ID yang ingin dihapus: ")
+
+	var id string
+	id = inputString("ID yang ingin dihapus: ")
 	if id == "batal" {
 		msgInfo("Hapus dibatalkan.")
 		next()
 		return
 	}
 
-	idx := findIndexByID(id)
+	var idx int
+	idx = findIndexByID(id)
 	if idx == -1 {
 		msgError("ID '" + id + "' tidak ditemukan dalam data.")
 		next()
 		return
 	}
 
-	fmt.Println()
+	clearScreen()
+	pageTitle("KONFIRMASI HAPUS")
 	hLineSep(54)
-	fmt.Printf("  Nama   : %s\n", productsArr[idx].Name)
+	boxRow("PRODUK YANG AKAN DIHAPUS", 54)
+	hLineSep(54)
 	fmt.Printf("  ID     : %s\n", productsArr[idx].ID)
+	fmt.Printf("  Nama   : %s\n", productsArr[idx].Name)
 	fmt.Printf("  Harga  : Rp %d\n", productsArr[idx].Price)
+	fmt.Printf("  Stok terjual : %d unit\n", productsArr[idx].Sold)
 	hLineSep(54)
+	fmt.Println("  Perhatian: tindakan ini tidak dapat dibatalkan setelah disimpan.")
 
-	confirm := inputStringConfirm("Yakin ingin menghapus produk ini?")
+	var confirm string
+	confirm = inputStringConfirm("Yakin ingin menghapus produk ini?")
 	if confirm != "y" && confirm != "Y" {
 		msgInfo("Hapus dibatalkan.")
 		next()
@@ -1477,8 +1560,11 @@ func deleteProduct() {
 
 func viewByID(detail bool) {
 	fmt.Println()
-	id := inputString("Masukkan ID produk: ")
-	idx := findIndexByID(id)
+	var id string
+	id = inputString("Masukkan ID produk: ")
+
+	var idx int
+	idx = findIndexByID(id)
 
 	if idx == -1 {
 		msgError("Produk dengan ID '" + id + "' tidak ditemukan.")
@@ -1501,7 +1587,8 @@ func printAllProducts() {
 		return
 	}
 
-	w := 120
+	var w int
+	w = 120
 	hLine(w)
 	fmt.Printf("  %-10s | %-40s | %-18s | %-14s | %-8s\n",
 		"ID", "Nama Produk", "Kategori", "Harga (Rp)", "Terjual")
@@ -1521,7 +1608,8 @@ func printAllProducts() {
 }
 
 func printProductRow(idx int) {
-	w := 120
+	var w int
+	w = 120
 	hLine(w)
 	fmt.Printf("  %-10s | %-40s | %-18s | %-14s | %-8s\n",
 		"ID", "Nama Produk", "Kategori", "Harga (Rp)", "Terjual")
@@ -1537,7 +1625,8 @@ func printProductRow(idx int) {
 }
 
 func printProductDetail(idx int) {
-	p := productsArr[idx]
+	var p Product
+	p = productsArr[idx]
 
 	fmt.Println()
 	boxTop(60)
@@ -1597,7 +1686,8 @@ func bestSellingRecommendation() {
 	}
 
 	// Insertion sort by Sold desc
-	sorted := productsArr
+	var sorted ProductArray
+	sorted = productsArr
 	var i, j int
 	var temp Product
 	for i = 1; i < countData; i++ {
@@ -1614,7 +1704,8 @@ func bestSellingRecommendation() {
 	hLine(80)
 	fmt.Printf("  %-10s | %-35s | %-15s | %-8s\n", "ID", "Nama Produk", "Harga (Rp)", "Terjual")
 	hLineThin(80)
-	limit := countData
+	var limit int
+	limit = countData
 	if limit > 5 {
 		limit = 5
 	}
@@ -1623,6 +1714,7 @@ func bestSellingRecommendation() {
 			sorted[i].ID, sorted[i].Name, sorted[i].Price, sorted[i].Sold)
 	}
 	hLine(80)
+	fmt.Printf("\n  Menampilkan %d produk terlaris dari total %d produk.\n", limit, countData)
 	next()
 }
 
@@ -1636,8 +1728,10 @@ func lowStockRecommendation() {
 		return
 	}
 
-	threshold := 5
-	found := false
+	var threshold int
+	threshold = 5
+	var found bool
+	found = false
 
 	fmt.Println()
 	hLine(80)
@@ -1662,7 +1756,8 @@ func lowStockRecommendation() {
 	}
 	hLine(80)
 	if !found {
-		msgInfo("Tidak ada produk dengan stok menipis (stok <= 5).")
+		fmt.Println()
+		msgInfo(fmt.Sprintf("Aman! Tidak ada produk dengan stok menipis (stok <= %d).", threshold))
 	}
 	next()
 }
@@ -1680,7 +1775,8 @@ func mostSoldProduct() {
 		return
 	}
 
-	most := 0
+	var most int
+	most = 0
 	var i int
 	for i = 1; i < countData; i++ {
 		if productsArr[i].Sold > productsArr[most].Sold {
@@ -1702,7 +1798,8 @@ func leastSoldProduct() {
 		return
 	}
 
-	least := 0
+	var least int
+	least = 0
 	var i int
 	for i = 1; i < countData; i++ {
 		if productsArr[i].Sold < productsArr[least].Sold {
@@ -1716,7 +1813,8 @@ func leastSoldProduct() {
 }
 
 func totalSales() int {
-	total := 0
+	var total int
+	total = 0
 	var i int
 	for i = 0; i < countData; i++ {
 		total = total + productsArr[i].Sold
@@ -1739,10 +1837,11 @@ func sequentialSearchName(name string) int {
 }
 
 func findIndexByID(id string) int {
-	left := 0
-	right := countData - 1
+	var left, right, mid int
+	left = 0
+	right = countData - 1
 	for left <= right {
-		mid := (left + right) / 2
+		mid = (left + right) / 2
 		if id == productsArr[mid].ID {
 			return mid
 		}
@@ -1848,8 +1947,9 @@ func inputValidString(prompt string, maxLen int) string {
 }
 
 func inputValidPrice(prompt string) int {
+	var val int
 	for {
-		val := inputInt(prompt)
+		val = inputInt(prompt)
 		if val <= 0 {
 			msgWarning("Harga harus lebih dari 0!")
 			continue
@@ -1859,8 +1959,9 @@ func inputValidPrice(prompt string) int {
 }
 
 func inputValidStock(prompt string) int {
+	var val int
 	for {
-		val := inputInt(prompt)
+		val = inputInt(prompt)
 		if val < 0 {
 			msgWarning("Stok tidak boleh negatif!")
 			continue
@@ -1870,8 +1971,9 @@ func inputValidStock(prompt string) int {
 }
 
 func inputValidYear(prompt string) int {
+	var val int
 	for {
-		val := inputInt(prompt)
+		val = inputInt(prompt)
 		if val < 2024 {
 			msgWarning("Tahun kedaluwarsa tidak valid! Minimal 2024.")
 			continue
