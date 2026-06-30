@@ -1577,16 +1577,17 @@ func printSortedProducts(mode string) {
 	var sorted ProductArray
 	sorted = productsArr
 
-	if mode == "insertion_asc" {
+	switch mode {
+	case "insertion_asc":
 		pageTitle("PRODUK: HARGA MURAH KE MAHAL")
 		insertionSortPriceAsc(&sorted, countData)
-	} else if mode == "insertion_desc" {
+	case "insertion_desc":
 		pageTitle("PRODUK: HARGA MAHAL KE MURAH")
 		insertionSortPriceDesc(&sorted, countData)
-	} else if mode == "selection_asc" {
+	case "selection_asc":
 		pageTitle("PRODUK: NAMA A -> Z")
 		selectionSortNameAsc(&sorted, countData)
-	} else {
+	default:
 		pageTitle("PRODUK: NAMA Z -> A")
 		selectionSortNameDesc(&sorted, countData)
 	}
