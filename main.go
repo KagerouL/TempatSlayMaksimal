@@ -736,52 +736,6 @@ func boxBottom(n int) {
 	fmt.Println()
 }
 
-func boxRow(text string, width int) {
-	var inner, pad, left, right int
-	inner = width - 2
-	pad = inner - len(text)
-	left = pad / 2
-	right = pad - left
-	fmt.Print("|")
-	var i int
-	for i = 0; i < left; i++ {
-		fmt.Print(" ")
-	}
-	fmt.Print(text)
-	for i = 0; i < right; i++ {
-		fmt.Print(" ")
-	}
-	fmt.Print("|")
-	fmt.Println()
-}
-
-func boxRowLeft(text string, width int) {
-	var inner, pad int
-	inner = width - 4
-	fmt.Print("|  ")
-	fmt.Print(text)
-	pad = inner - len(text)
-	var i int
-	for i = 0; i < pad; i++ {
-		fmt.Print(" ")
-	}
-	fmt.Print("  |")
-	fmt.Println()
-}
-
-func centerText(text string, width int) {
-	var pad, left, i int
-	pad = width - len(text)
-	if pad < 0 {
-		pad = 0
-	}
-	left = pad / 2
-	for i = 0; i < left; i++ {
-		fmt.Print(" ")
-	}
-	fmt.Println(text)
-}
-
 func clearScreen() {
 	fmt.Print("\033[H\033[2J")
 }
@@ -820,11 +774,11 @@ func logo() {
        /::::\    \       \:::\   \:::\    \      /:::/ |::|   |
       /::::::\    \    ___\:::\   \:::\    \    /:::/  |::|___|______
      /:::/\:::\    \  /\   \:::\   \:::\    \  /:::/   |::::::::\    \
-    /:::/  \:::\____\/::\   \:::\   \:::\____\/:::/    |:::::::::\____\
-   /:::/    \::/    /\:::\   \:::\   \::/    /\::/    / ~~~~~/:::/    /
-  /:::/    / \/____/  \:::\   \:::\   \/____/  \/____/      /:::/    /
- /:::/    /            \:::\   \:::\    \                  /:::/    /
-/:::/    /              \:::\   \:::\____\                /:::/    /
+    /:::/  \:::\____\/::\   \:::\   \::/    /\::/    / ~~~~~/:::/    /
+   /:::/    \::/    /\:::\   \:::\   \/____/  \/____/      /:::/    /
+  /:::/    / \/____/  \:::\   \:::\    \                  /:::/    /
+ /:::/    /            \:::\   \:::\____\                /:::/    /
+/:::/    /              \:::\   \:::\    \               /:::/    /
 \::/    /                \:::\  /:::/    /               /:::/    /
  \/____/                  \:::\/:::/    /               /:::/    /
                            \::::::/    /               /:::/    /
@@ -834,7 +788,7 @@ func logo() {
 %s`, pink, reset)
 	fmt.Println()
 	hLine(72)
-	boxRow("Tetap Slay Maksimal", 72)
+	fmt.Println("                   Tetap Slay Maksimal")
 	hLine(72)
 	fmt.Println()
 	next()
@@ -843,8 +797,8 @@ func logo() {
 func pageTitle(text string) {
 	fmt.Println()
 	boxTop(54)
-	boxRow("ANDA BERADA DI", 54)
-	boxRow(text, 54)
+	fmt.Println("|              ANDA BERADA DI              |")
+	fmt.Println("|  " + text)
 	boxBottom(54)
 	fmt.Println()
 }
@@ -856,46 +810,46 @@ func pageTitle(text string) {
 func msgSuccess(msg string) {
 	fmt.Println()
 	boxTop(54)
-	boxRow("SUCCESS <3", 54)
+	fmt.Println("|              SUCCESS <3              |")
 	hLineSep(54)
-	boxRow(msg, 54)
+	fmt.Println("|  " + msg)
 	boxBottom(54)
 	fmt.Println()
-	centerText("Tekan Enter untuk melanjutkan!!", 32)
+	fmt.Println("  Tekan Enter untuk melanjutkan!!")
 	fmt.Scanln()
 }
 
 func msgError(msg string) {
 	fmt.Println()
 	boxTop(54)
-	boxRow("ERROR -_-", 54)
+	fmt.Println("|              ERROR -_-              |")
 	hLineSep(54)
-	boxRow(msg, 54)
+	fmt.Println("|  " + msg)
 	boxBottom(54)
 	fmt.Println()
-	centerText("Tekan Enter untuk melanjutkan!!", 32)
+	fmt.Println("  Tekan Enter untuk melanjutkan!!")
 	fmt.Scanln()
 }
 
 func msgWarning(msg string) {
 	fmt.Println()
 	boxTop(54)
-	boxRow("PERINGATAN >_<", 54)
+	fmt.Println("|              PERINGATAN >_<              |")
 	hLineSep(54)
-	boxRow(msg, 54)
+	fmt.Println("|  " + msg)
 	boxBottom(54)
 	fmt.Println()
-	centerText("Tekan Enter untuk melanjutkan!!", 32)
+	fmt.Println("  Tekan Enter untuk melanjutkan!!")
 	fmt.Scanln()
 }
 
 func msgInfo(msg string) {
 	fmt.Println()
 	hLineSep(54)
-	boxRowLeft(msg, 54)
+	fmt.Println("|  " + msg)
 	hLineSep(54)
 	fmt.Println()
-	centerText("Tekan Enter untuk melanjutkan!!", 32)
+	fmt.Println("  Tekan Enter untuk melanjutkan!!")
 	fmt.Scanln()
 }
 
@@ -906,21 +860,22 @@ func msgInfo(msg string) {
 func inputInt(prompt string) int {
 	var err error
 	var value int
-	for {
+	var valid bool
+	valid = false
+	for !valid {
 		fmt.Print("  " + prompt)
 		_, err = fmt.Scan(&value)
 		if err != nil {
 			msgWarning("Input harus berupa angka!")
 			var dummy string
 			fmt.Scanln(&dummy)
-			continue
-		}
-		if value < 0 {
+		} else if value < 0 {
 			msgWarning("Input tidak boleh negatif!")
-			continue
+		} else {
+			valid = true
 		}
-		return value
 	}
+	return value
 }
 
 func inputString(prompt string) string {
@@ -978,11 +933,23 @@ func mainMenu() {
 		case 4:
 			salesMenu()
 		case 0:
-			clearScreen()
-			fmt.Println()
-			msgInfo("Program selesai. Terima kasih!")
-			fmt.Println()
-			return
+			var confirm string
+			for {
+				confirm = inputStringConfirm("Apakah Anda yakin ingin keluar dari program?")
+				if confirm == "y" || confirm == "Y" {
+					clearScreen()
+					fmt.Println()
+					msgInfo("Program selesai. Terima kasih!")
+					fmt.Println()
+					return
+				}
+				if confirm == "n" || confirm == "N" {
+					clearScreen()
+					mainMenu()
+					return
+				}
+				msgWarning("Masukkan hanya 'y' atau 'n'.")
+			}
 		default:
 			msgWarning("Menu tidak tersedia. Pilih 0-4.")
 		}
@@ -1023,14 +990,15 @@ func crudMenu() {
 func viewMenu() {
 	if isEmpty() {
 		msgWarning("Belum ada data produk.")
-		next()
 		return
 	}
 	for {
 		var items = []string{
-			"Semua Produk (Ringkas)",
+			"Semua Produk",
 			"Cari Produk by ID",
+			"Cari Produk by Nama",
 			"Detail Lengkap Produk",
+			"Urutkan Produk",
 		}
 		renderMenu("LIHAT PRODUK", items)
 		var c int
@@ -1040,15 +1008,31 @@ func viewMenu() {
 			printAllProducts()
 			next()
 		case 2:
+			clearScreen()
+			pageTitle("CARI PRODUK BY ID")
+			fmt.Println("  (Binary Search — ID harus urut)")
+			fmt.Println()
 			viewByID(false)
 			next()
 		case 3:
+			clearScreen()
+			pageTitle("CARI PRODUK BY NAMA")
+			fmt.Println("  (Sequential Search)")
+			fmt.Println()
+			searchByName()
+			next()
+		case 4:
+			clearScreen()
+			pageTitle("DETAIL LENGKAP PRODUK")
+			fmt.Println()
 			viewByID(true)
 			next()
+		case 5:
+			sortMenu()
 		case 0:
 			return
 		default:
-			msgWarning("Menu tidak tersedia. Pilih 0-3.")
+			msgWarning("Menu tidak tersedia. Pilih 0-5.")
 		}
 		clearScreen()
 	}
@@ -1106,6 +1090,39 @@ func salesMenu() {
 	}
 }
 
+func sortMenu() {
+	for {
+		var items = []string{
+			"Harga: Murah -> Mahal  (Insertion Sort)",
+			"Harga: Mahal -> Murah  (Insertion Sort)",
+			"Nama:  A -> Z          (Selection Sort)",
+			"Nama:  Z -> A          (Selection Sort)",
+		}
+		renderMenu("URUTKAN PRODUK", items)
+		var c int
+		c = inputInt("Pilih urutan: ")
+		switch c {
+		case 1:
+			printSortedProducts("insertion_asc")
+			next()
+		case 2:
+			printSortedProducts("insertion_desc")
+			next()
+		case 3:
+			printSortedProducts("selection_asc")
+			next()
+		case 4:
+			printSortedProducts("selection_desc")
+			next()
+		case 0:
+			return
+		default:
+			msgWarning("Menu tidak tersedia. Pilih 0-4.")
+		}
+		clearScreen()
+	}
+}
+
 // ======================================================
 // CRUD
 // ======================================================
@@ -1146,7 +1163,7 @@ func createProduct() {
 
 	fmt.Println()
 	hLineSep(54)
-	boxRow("LANGKAH 1/4 - INFO PRODUK", 54)
+	fmt.Println("| LANGKAH 1/4 - INFO PRODUK |")
 	hLineSep(54)
 
 	p.Name = inputValidString("Nama Produk        : ", 50)
@@ -1155,7 +1172,7 @@ func createProduct() {
 
 	fmt.Println()
 	hLineSep(54)
-	boxRow("LANGKAH 2/4 - INFO BRAND", 54)
+	fmt.Println("| LANGKAH 2/4 - INFO BRAND |")
 	hLineSep(54)
 
 	p.BrandInfo.Name = inputValidString("Nama Brand         : ", 50)
@@ -1163,7 +1180,7 @@ func createProduct() {
 
 	fmt.Println()
 	hLineSep(54)
-	boxRow("LANGKAH 3/4 - DETAIL PRODUK", 54)
+	fmt.Println("| LANGKAH 3/4 - DETAIL PRODUK |")
 	hLineSep(54)
 
 	p.DetailInfo.Description = inputValidString("Deskripsi          : ", 100)
@@ -1172,7 +1189,7 @@ func createProduct() {
 
 	fmt.Println()
 	hLineSep(54)
-	boxRow("LANGKAH 4/4 - VARIAN PRODUK", 54)
+	fmt.Println("| LANGKAH 4/4 - VARIAN PRODUK |")
 	hLineSep(54)
 
 	var variantCount int
@@ -1199,11 +1216,10 @@ func createProduct() {
 	p.RateInfo.TotalReview = 0
 	p.ReviewCount = 0
 
-	// Konfirmasi
 	clearScreen()
 	pageTitle("KONFIRMASI PRODUK BARU")
 	hLineSep(54)
-	boxRow("RINGKASAN DATA", 54)
+	fmt.Println("| RINGKASAN DATA |")
 	hLineSep(54)
 	fmt.Printf("  ID Baru            : %s\n", p.ID)
 	fmt.Printf("  Nama               : %s\n", p.Name)
@@ -1262,7 +1278,6 @@ func updateProduct() {
 		return
 	}
 
-	// Simpan data lama
 	var oldData Product
 	oldData = productsArr[idx]
 
@@ -1360,7 +1375,7 @@ func updateProduct() {
 		pageTitle("UPDATE SEMUA DATA")
 
 		hLineSep(54)
-		boxRow("INFO PRODUK", 54)
+		fmt.Println("| INFO PRODUK |")
 		hLineSep(54)
 
 		productsArr[idx].Name =
@@ -1374,7 +1389,7 @@ func updateProduct() {
 
 		fmt.Println()
 		hLineSep(54)
-		boxRow("INFO BRAND", 54)
+		fmt.Println("| INFO BRAND |")
 		hLineSep(54)
 
 		productsArr[idx].BrandInfo.Name =
@@ -1385,7 +1400,7 @@ func updateProduct() {
 
 		fmt.Println()
 		hLineSep(54)
-		boxRow("DETAIL PRODUK", 54)
+		fmt.Println("| DETAIL PRODUK |")
 		hLineSep(54)
 
 		productsArr[idx].DetailInfo.Description =
@@ -1407,7 +1422,7 @@ func updateProduct() {
 	pageTitle("HASIL UPDATE PRODUK")
 
 	hLineSep(60)
-	boxRow("SEBELUM", 60)
+	fmt.Println("| SEBELUM |")
 	hLineSep(60)
 	fmt.Println("  ID              :", oldData.ID)
 	fmt.Println("  Nama            :", oldData.Name)
@@ -1422,7 +1437,7 @@ func updateProduct() {
 	fmt.Println()
 
 	hLineSep(60)
-	boxRow("SESUDAH", 60)
+	fmt.Println("| SESUDAH |")
 	hLineSep(60)
 	fmt.Println("  ID              :", productsArr[idx].ID)
 	fmt.Println("  Nama            :", productsArr[idx].Name)
@@ -1437,7 +1452,7 @@ func updateProduct() {
 	fmt.Println()
 
 	hLineSep(60)
-	boxRow("RINGKASAN PERUBAHAN", 60)
+	fmt.Println("| RINGKASAN PERUBAHAN |")
 	hLineSep(60)
 
 	var adaPerubahan bool
@@ -1525,7 +1540,7 @@ func deleteProduct() {
 	clearScreen()
 	pageTitle("KONFIRMASI HAPUS")
 	hLineSep(54)
-	boxRow("PRODUK YANG AKAN DIHAPUS", 54)
+	fmt.Println("| PRODUK YANG AKAN DIHAPUS |")
 	hLineSep(54)
 	fmt.Printf("  ID     : %s\n", productsArr[idx].ID)
 	fmt.Printf("  Nama   : %s\n", productsArr[idx].Name)
@@ -1630,12 +1645,12 @@ func printProductDetail(idx int) {
 
 	fmt.Println()
 	boxTop(60)
-	boxRow("DETAIL PRODUK", 60)
+	fmt.Println("|                 DETAIL PRODUK                 |")
 	boxBottom(60)
 	fmt.Println()
 
 	hLineSep(60)
-	boxRow("INFO UMUM", 60)
+	fmt.Println("| INFO UMUM |")
 	hLineSep(60)
 	fmt.Printf("  %-22s: %s\n", "ID", p.ID)
 	fmt.Printf("  %-22s: %s\n", "Nama", p.Name)
@@ -1644,20 +1659,20 @@ func printProductDetail(idx int) {
 	fmt.Printf("  %-22s: %d unit\n", "Terjual", p.Sold)
 
 	hLineSep(60)
-	boxRow("BRAND", 60)
+	fmt.Println("| BRAND |")
 	hLineSep(60)
 	fmt.Printf("  %-22s: %s\n", "Nama Brand", p.BrandInfo.Name)
 	fmt.Printf("  %-22s: %s\n", "Negara Asal", p.BrandInfo.Country)
 
 	hLineSep(60)
-	boxRow("DETAIL PRODUK", 60)
+	fmt.Println("| DETAIL PRODUK |")
 	hLineSep(60)
 	fmt.Printf("  %-22s: %s\n", "Deskripsi", p.DetailInfo.Description)
 	fmt.Printf("  %-22s: %s\n", "Jenis Kulit", p.DetailInfo.SkinType)
 	fmt.Printf("  %-22s: %d\n", "Tahun Kedaluwarsa", p.DetailInfo.ExpiredYear)
 
 	hLineSep(60)
-	boxRow("VARIAN", 60)
+	fmt.Println("| VARIAN |")
 	hLineSep(60)
 	var i int
 	for i = 0; i < p.VariantCount; i++ {
@@ -1669,6 +1684,54 @@ func printProductDetail(idx int) {
 		)
 	}
 	hLineSep(60)
+}
+
+func printSortedProducts(mode string) {
+	clearScreen()
+
+	var sorted ProductArray
+	sorted = productsArr
+
+	if mode == "insertion_asc" {
+		pageTitle("PRODUK: HARGA MURAH KE MAHAL")
+		insertionSortPriceAsc(&sorted, countData)
+	} else if mode == "insertion_desc" {
+		pageTitle("PRODUK: HARGA MAHAL KE MURAH")
+		insertionSortPriceDesc(&sorted, countData)
+	} else if mode == "selection_asc" {
+		pageTitle("PRODUK: NAMA A -> Z")
+		selectionSortNameAsc(&sorted, countData)
+	} else {
+		pageTitle("PRODUK: NAMA Z -> A")
+		selectionSortNameDesc(&sorted, countData)
+	}
+
+	var w int
+	w = 120
+	hLine(w)
+	fmt.Printf("  %-10s | %-40s | %-18s | %-14s | %-8s\n",
+		"ID", "Nama Produk", "Kategori", "Harga (Rp)", "Terjual")
+	hLineThin(w)
+
+	var i int
+	for i = 0; i < countData; i++ {
+		fmt.Printf("  %-10s | %-40s | %-18s | %-14d | %-8d\n",
+			sorted[i].ID,
+			sorted[i].Name,
+			sorted[i].Category,
+			sorted[i].Price,
+			sorted[i].Sold,
+		)
+	}
+	hLine(w)
+	fmt.Printf("  Total produk: %d\n", countData)
+	fmt.Println()
+
+	if mode == "insertion_asc" || mode == "insertion_desc" {
+		fmt.Println("  [Algoritma: Insertion Sort]")
+	} else {
+		fmt.Println("  [Algoritma: Selection Sort]")
+	}
 }
 
 // ======================================================
@@ -1685,7 +1748,6 @@ func bestSellingRecommendation() {
 		return
 	}
 
-	// Insertion sort by Sold desc
 	var sorted ProductArray
 	sorted = productsArr
 	var i, j int
@@ -1825,6 +1887,31 @@ func totalSales() int {
 // ======================================================
 // SEARCHING
 // ======================================================
+func searchByName() {
+	var name string
+	name = inputString("Masukkan nama produk: ")
+
+	var idx int
+	idx = sequentialSearchName(name)
+
+	if idx == -1 {
+		msgError("Produk dengan nama '" + name + "' tidak ditemukan.")
+		return
+	}
+
+	fmt.Println()
+	hLineSep(54)
+	fmt.Println("| PRODUK DITEMUKAN |")
+	hLineSep(54)
+	printProductRow(idx)
+	fmt.Println()
+
+	var jawab string
+	jawab = inputStringConfirm("Tampilkan detail lengkap?")
+	if jawab == "y" || jawab == "Y" {
+		printProductDetail(idx)
+	}
+}
 
 func sequentialSearchName(name string) int {
 	var i int
@@ -1932,58 +2019,66 @@ func isFull(n int) bool {
 
 func inputValidString(prompt string, maxLen int) string {
 	var val string
-	for {
+	var valid bool
+	valid = false
+	for !valid {
 		val = inputString(prompt)
-		if len(val) == 0 {
+		if val == "" {
 			msgWarning("Input tidak boleh kosong!")
-			continue
-		}
-		if len(val) > maxLen {
+		} else if len(val) > maxLen {
 			msgWarning(fmt.Sprintf("Input terlalu panjang! Maksimal %d karakter.", maxLen))
-			continue
+		} else {
+			valid = true
 		}
-		return val
 	}
+	return val
 }
 
 func inputValidPrice(prompt string) int {
 	var val int
-	for {
+	var valid bool
+	valid = false
+	for !valid {
 		val = inputInt(prompt)
 		if val <= 0 {
 			msgWarning("Harga harus lebih dari 0!")
-			continue
+		} else {
+			valid = true
 		}
-		return val
 	}
+	return val
 }
 
 func inputValidStock(prompt string) int {
 	var val int
-	for {
+	var valid bool
+	valid = false
+	for !valid {
 		val = inputInt(prompt)
 		if val < 0 {
 			msgWarning("Stok tidak boleh negatif!")
-			continue
+		} else {
+			valid = true
 		}
-		return val
 	}
+	return val
 }
 
 func inputValidYear(prompt string) int {
 	var val int
-	for {
+	var valid bool
+	valid = false
+	for !valid {
 		val = inputInt(prompt)
 		if val < 2024 {
 			msgWarning("Tahun kedaluwarsa tidak valid! Minimal 2024.")
-			continue
-		}
-		if val > 2100 {
+		} else if val > 2100 {
 			msgWarning("Tahun kedaluwarsa tidak masuk akal! Maksimal 2100.")
-			continue
+		} else {
+			valid = true
 		}
-		return val
 	}
+	return val
 }
 
 // ======================================================
